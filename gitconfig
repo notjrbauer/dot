@@ -1,0 +1,40 @@
+[user]
+	email = notjrbauer@gmail.com
+	name = notjrbauer
+[mergetool]
+  keepBackup = false
+[core]
+  editor = /usr/local/bin/nvim
+  autocrlf = false
+  pager = "diff-highlight | diff-so-fancy | less --tabs=1,5 -R"
+[alias]
+
+  lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
+  co = checkout
+  st = status -s
+  ri = rebase -i
+  ca = commit -a
+  cam = commit -a --amend
+  camno = commit --amend --no-edit
+  pom = push origin master
+  pog = push origin gh-pages
+  prom = pull --rebase origin master
+  prog = pull --rebase origin gh-pages
+  log-file = log -p -M --follow --stat --
+  switch = !legit switch \"$@\"
+  branches = !legit branches
+  sprout = !legit sprout \"$@\"
+  unpublish = !legit unpublish \"$@\"
+  harvest = !legit harvest \"$@\"
+  sync = !legit sync \"$@\"
+  graft = !legit graft \"$@\"
+  tree = log --graph --full-history --all --color --pretty=tformat:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s%x20%x1b[33m(%an)%x1b[0m"
+  find = log --pretty=\"format:%Cgreen%H %Cblue%s\" --name-status --grep
+[merge]
+	tool = opendiff
+[pager]
+	diff = diff-so-fancy | less --tabs=1,5 -R
+	show = diff-so-fancy | less --tabs=1,5 -R
+[color]
+  ui = true
+

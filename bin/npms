@@ -1,0 +1,4 @@
+#!/bin/bash
+
+open "https://www.npmjs.com/search?q=$1"
+
