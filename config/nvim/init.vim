@@ -1,11 +1,12 @@
 set runtimepath+=~/.vim_runtime
 call plug#begin('~/.vim/plugged')
-Plug 'Shougo/deoplete.nvim'
-Plug 'carlitux/deoplete-ternjs'
+Plug 'Shougo/deoplete.nvim' | Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
+Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
+"Plug 'carlitux/deoplete-ternjs'
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
 "Plug 'Shougo/neoinclude.vim'
-Plug 'Konfekt/FastFold'
+"Plug 'Konfekt/FastFold'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 call plug#end()
@@ -22,6 +23,9 @@ function! s:fzf_statusline()
   setlocal statusline=%#fzf1#\ >\ %#fzf2#fz%#fzf3#f
 endfunction
 
+let g:python3_host_prog = '/usr/local/bin/python3.5'
+    
+
 " Autocomplete
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#enable_refresh_always = 1
@@ -32,7 +36,6 @@ let g:deoplete#keyword_patterns = {}
 let g:tern_request_timeout = 1
 let g:tern_show_signature_in_pum = 0  " This do disable full signature type on autocomplete
 let g:neosnippet#enable_completed_snippet = 1
-"let g:deoplete#enable_at_startup = 1
 if !exists('g:deoplete#omni#input_patterns')
   let g:deoplete#omni#input_patterns = {}
 endif
@@ -56,16 +59,16 @@ function! s:my_cr_function()
 endfunction
 
 let g:SuperTabDefaultCompletionType = '<C-n>'
-if has('conceal')
-  set conceallevel=2 concealcursor=inv
-endif
+"if has('conceal')
+"  set conceallevel=2 concealcursor=inv
+"endif
 
 " omnifuncs
 augroup omnifuncs
   autocmd!
   autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
   autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-  "autocmd FileType javascript setlocal omnifunc=tern#Complete
+  autocmd FileType javascript setlocal omnifunc=tern#Complete
   autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
   autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 augroup end
