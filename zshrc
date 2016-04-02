@@ -52,6 +52,7 @@ setopt VI
 
 # only fools wouldn't do this ;-)
 export EDITOR="vi"
+export NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 setopt IGNORE_EOF
 

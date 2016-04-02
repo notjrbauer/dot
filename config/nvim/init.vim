@@ -6,7 +6,7 @@ Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
 Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'
 "Plug 'Shougo/neoinclude.vim'
-"Plug 'Konfekt/FastFold'
+Plug 'Konfekt/FastFold'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 call plug#end()
