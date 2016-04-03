@@ -1,12 +1,6 @@
 set runtimepath+=~/.vim_runtime
 call plug#begin('~/.vim/plugged')
-Plug 'Shougo/deoplete.nvim' | Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
-Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
-"Plug 'carlitux/deoplete-ternjs'
-Plug 'Shougo/neosnippet.vim'
-Plug 'Shougo/neosnippet-snippets'
-"Plug 'Shougo/neoinclude.vim'
-Plug 'Konfekt/FastFold'
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py --tern-completer' }
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 call plug#end()
@@ -23,45 +17,10 @@ function! s:fzf_statusline()
   setlocal statusline=%#fzf1#\ >\ %#fzf2#fz%#fzf3#f
 endfunction
 
-let g:python3_host_prog = '/usr/local/bin/python3.5'
     
 
-" Autocomplete
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#enable_refresh_always = 1
-let g:deoplete#enable_camel_case = 1
-let g:deoplete#enable_smart_case = 1
-let g:deoplete#auto_complete_start_length = 2
-let g:deoplete#keyword_patterns = {}
-let g:tern_request_timeout = 1
-let g:tern_show_signature_in_pum = 0  " This do disable full signature type on autocomplete
-let g:neosnippet#enable_completed_snippet = 1
-if !exists('g:deoplete#omni#input_patterns')
-  let g:deoplete#omni#input_patterns = {}
-endif
-" let g:deoplete#disable_auto_complete = 1
 autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
-" NeoSnippet mappings (^k to expand a selected snippet)
-imap <C-k>    <Plug>(neosnippet_expand_or_jump)
-smap <C-k>    <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>    <Plug>(neosnippet_expand_target)
-inoremap <silent> <CR>   <C-r>=<SID>my_cr_function()<CR>
-imap <expr><TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ neosnippet#expandable_or_jumpable() ?
-      \    neosnippet#mappings#expand_or_jump_impl() : "\<TAB>"
-
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-      \    neosnippet#mappings#expand_or_jump_impl() : "\<TAB>"
-
-function! s:my_cr_function()
-  return pumvisible() ? deoplete#mappings#close_popup() : "\<CR>"
-endfunction
-
 let g:SuperTabDefaultCompletionType = '<C-n>'
-"if has('conceal')
-"  set conceallevel=2 concealcursor=inv
-"endif
 
 " omnifuncs
 augroup omnifuncs
@@ -72,10 +31,7 @@ augroup omnifuncs
   autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
   autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 augroup end
-  " deoplete tab-complete
-inoremap <silent><expr> <Tab> pumvisible() ? "\<C-n>" : deoplete#mappings#manual_complete()
-  " tern
-autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR>
+
 autocmd! User FzfStatusLine call <SID>fzf_statusline()
 try
   source ~/.vim_runtime/my_configs.vim
