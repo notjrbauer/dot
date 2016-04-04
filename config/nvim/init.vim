@@ -1,8 +1,18 @@
 set runtimepath+=~/.vim_runtime
 call plug#begin('~/.vim/plugged')
-Plug 'Valloric/YouCompleteMe', { 'do': './install.py --tern-completer' }
+
+Plug 'xolox/vim-misc'
+Plug 'xolox/vim-notes'
+Plug 'zaiste/tmux.vim'
+Plug 'isRuslan/vim-es6'
+Plug 'tpope/vim-surround'
+Plug 'easymotion/vim-easymotion'
+Plug 'terryma/vim-multiple-cursors'
+
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py --tern-completer' }
 call plug#end()
 
 source ~/.vim_runtime/vimrcs/basic.vim

@@ -4,7 +4,6 @@ syntax enable
 let g:hybrid_custom_term_colors=1
 set background=dark
 colorscheme hybrid_reverse
-"http://pastebin.com/8qhxnicU
 set laststatus=2
 set tabstop=2                 " size of a hard tabstop
 set expandtab                 " always uses spaces instead of tab characters
@@ -12,6 +11,7 @@ set shiftwidth=2              " size of an indent
 set smartcase
 setlocal autoindent
 setlocal smartindent
+
 inoremap  <Up>     <NOP>
 inoremap  <Down>   <NOP>
 inoremap  <Left>   <NOP>
@@ -41,15 +41,14 @@ nnoremap <F2> :GundoToggle<CR>
 nmap <leader>s :OverCommandLine<CR>
 
 " persist (g)undo tree between sessions
-"set undofile
-"set undodir=~/.vim/undo/
-"set undolevels=1000
-"set undoreload=10000
-"set backupdir=~/.vim/backup/
-"set directory=~/.vim/backup/
+set undofile
+set undodir=~/.vim/undo/
+set undolevels=1000
+set undoreload=10000
+set backupdir=~/.vim/backup/
+set directory=~/.vim/backup/
 
 autocmd FileType c,cpp,python,ruby,java,js autocmd BufWritePre * :%s/\s\+$//e
-"let g:airline_theme = 'hybridline'
 let g:airline_theme = 'hybridline'
 
 filetype plugin on
@@ -89,15 +88,7 @@ if &term =~ '256color'
 endif
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
-
-"setlocal omnifunc=tern#Complete
-"call tern#Enable()
-
-"this
-"autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
-
 let g:airline_powerline_fonts = 1
-"let g:airline_theme = 'base16'
 
 " Some TERN.JS Bindings
 "set foldlevelstart=99
@@ -107,60 +98,12 @@ set nofoldenable    " disable folding
 "let g:tern_show_argument_hints='true' " 'on_hold'
 let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [],'passive_filetypes': [] }
 nnoremap <C-w>E :SyntasticCheck<CR> :SyntasticToggleMode<CR>
-"let g:ycm_register_as_syntastic_checker = 1
-"let g:ycm_collect_identifiers_from_tags_files = 1
-"let g:syntastic_html_tidy_ignore_errors = [
-"    \"trimming empty <i>",
-"    \"proprietary attribute \"nh-"",
-"    \"trimming empty <span>",
-"    \"<input> proprietary attribute \"autocomplete\"",
-"    \"proprietary attribute \"role\"",
-"    \"proprietary attribute \"hidden\"",
-"\]
 "autocmd FileType javascript setlocal omnifunc=tern#Complete
 set fileformats=unix
 set ff=unix
 
 "- Rainbow
 let g:rainbow_active = 1
-"let g:rainbow_conf = {
-"\   'guifgs': [
-"\     '#458588',
-"\     '#b16286',
-"\     '#cc241d',
-"\     '#d65d0e',
-"\     '#458588',
-"\     '#b16286',
-"\     '#cc241d',
-"\     '#d65d0e',
-"\     '#458588',
-"\     '#b16286',
-"\     '#cc241d',
-"\     '#d65d0e',
-"\     '#458588',
-"\     '#b16286',
-"\     '#cc241d',
-"\     '#d65d0e'
-"\   ],
-"\   'ctermfgs': [
-"\     'brown',
-"\     'Darkblue',
-"\     'darkgray',
-"\     'darkgreen',
-"\     'darkcyan',
-"\     'darkred',
-"\     'darkmagenta',
-"\     'brown',
-"\     'lightgreen',
-"\     'green',
-"\     'darkmagenta',
-"\     'Darkblue',
-"\     'darkgreen',
-"\     'darkcyan',
-"\     'darkred',
-"\     'red'
-"\   ]
-"\}
 :bufdo let b:syntastic_mode="passive"
 let g:airline#extensions#syntastic#enabled = 1
 let g:gitgutter_enabled = 0
@@ -196,7 +139,6 @@ if has('nvim')
   let $FZF_DEFAULT_OPTS .= ' --inline-info'
 endif
 
-" nnoremap <silent> <Leader><Leader> :Files<CR>
 nnoremap <silent> <expr> <Leader><Leader> (expand('%') =~ 'NERD_tree' ? "\<c-w>\<c-w>" : '').":Files\<cr>"
 nnoremap <silent> <Leader>C        :Colors<CR>
 nnoremap <silent> <Leader><Enter>  :Buffers<CR>
@@ -209,4 +151,3 @@ command! Plugs call fzf#run({
       \ 'options': '--delimiter / --nth -1',
       \ 'down':    '~40%',
       \ 'sink':    'Explore'})
-
