@@ -1,9 +1,14 @@
+" Enable Truecolor
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+
+
 syntax on
 syntax enable
+
 let g:hybrid_custom_term_colors=1
 set background=dark
 colorscheme hybrid_reverse
+
 set laststatus=2
 set tabstop=2                 " size of a hard tabstop
 set expandtab                 " always uses spaces instead of tab characters
@@ -12,6 +17,7 @@ set smartcase
 setlocal autoindent
 setlocal smartindent
 
+" Disable arrow keys
 inoremap  <Up>     <NOP>
 inoremap  <Down>   <NOP>
 inoremap  <Left>   <NOP>
@@ -22,13 +28,12 @@ noremap   <Down>   <NOP>
 noremap   <Left>   <NOP>
 noremap   <Right>  <NOP>
 
+" JJ to Escape
 imap jj <Esc>
 imap <C-c> <CR><Esc>O
+
 " Make js beautifur
-"nnoremap <silent> <leader>ff :Esformatter<CR>
-"vnoremap <silent> <leader>ff :EsformatterVisual<CR>
 nnoremap <leader>ff :%!js-beautify -a -s 2 -j -q -f -<CR>
-"nnoremap <leader>ff :%! standard-format -w % <CR>
 
 " Invoke NERDTree
 let g:NERDTreeWinPos = "left"
@@ -48,7 +53,7 @@ set undoreload=10000
 set backupdir=~/.vim/backup/
 set directory=~/.vim/backup/
 
-autocmd FileType c,cpp,python,ruby,java,js autocmd BufWritePre * :%s/\s\+$//e
+autocmd FileType c,cpp,python,ruby,java,js,javascript autocmd BufWritePre * :%s/\s\+$//e
 let g:airline_theme = 'hybridline'
 
 filetype plugin on
@@ -60,7 +65,6 @@ set cursorline
 set number
 
 let g:multi_cursor_next_key="<C-x>"
-let g:javascript_fold='false'
 
 " Long autocomplete
 set wildmode=longest:full,full
@@ -86,28 +90,21 @@ if &term =~ '256color'
   " see also http://snk.tuxfamily.org/log/vim-254color-bce.html
   set t_ut=
 endif
+
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline_powerline_fonts = 1
 
-" Some TERN.JS Bindings
-"set foldlevelstart=99
-au FileType javascript setlocal nofoldenable
-set nofoldenable    " disable folding
-"let g:tern_map_keys=1
-"let g:tern_show_argument_hints='true' " 'on_hold'
 let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': [],'passive_filetypes': [] }
 nnoremap <C-w>E :SyntasticCheck<CR> :SyntasticToggleMode<CR>
-"autocmd FileType javascript setlocal omnifunc=tern#Complete
+
 set fileformats=unix
 set ff=unix
+set updatetime=500
 
-"- Rainbow
-let g:rainbow_active = 1
 :bufdo let b:syntastic_mode="passive"
 let g:airline#extensions#syntastic#enabled = 1
 let g:gitgutter_enabled = 0
-set updatetime=500
 " This is the default extra key bindings
 let g:fzf_action = {
       \ 'ctrl-t': 'tab split',
