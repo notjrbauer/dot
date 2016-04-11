@@ -33,7 +33,8 @@ imap jj <Esc>
 imap <C-c> <CR><Esc>O
 
 " Make js beautifur
-nnoremap <leader>ff :%!standard-format %<CR>
+nnoremap <leader>ff :%!js-beautify -a -s 2 -j -q -f -<CR>
+nnoremap <leader>fg :%!standard-format %<CR>
 
 " Invoke NERDTree
 let g:NERDTreeWinPos = "left"
