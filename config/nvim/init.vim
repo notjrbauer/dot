@@ -1,6 +1,9 @@
 set runtimepath+=~/.vim_runtime
 call plug#begin('~/.vim/plugged')
-
+function! DoRemote(arg)
+  UpdateRemotePlugins
+endfunction
+Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-notes'
 Plug 'zaiste/tmux.vim'
@@ -14,7 +17,7 @@ Plug 'Konfekt/FastFold'
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
 Plug 'Shougo/neoinclude.vim'
-Plug 'Shougo/deoplete.nvim' | Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
+Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
 Plug 'honza/vim-snippets'
 
 call plug#end()
@@ -44,7 +47,7 @@ augroup omnifuncs
 augroup end
 
 autocmd! User FzfStatusLine call <SID>fzf_statusline()
-
+let g:tern_request_timeout = 6000
 try
   source ~/.vim_runtime/my_configs.vim
 

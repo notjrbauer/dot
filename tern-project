@@ -2,6 +2,8 @@
   "libs": [
     "browser"
   ],
+  "dontLoad": ["node_modules"],
+  "loadEagerly": [],
   "plugins": {
     "node": {},
     "node_resolve": {},
