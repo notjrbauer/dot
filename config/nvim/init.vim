@@ -58,6 +58,14 @@ set wildmenu
 au FileType javascript setlocal nofoldenable
 set nofoldenable    " disable folding
 
+" allow multiple cursors before and after
+function! Multiple_cursors_before()
+    let b:deoplete_disable_auto_complete = 1
+endfunction
+
+function! Multiple_cursors_after()
+    let b:deoplete_disable_auto_complete = 0
+endfunction
 " Directory of snippets
 let g:neosnippet#snippets_directory='~/.vim/plugged/vim-snippets/snippets'
 

@@ -230,3 +230,5 @@ test -e ${HOME}/.iterm2_shell_integration.zsh && source ${HOME}/.iterm2_shell_in
 
 
 
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
