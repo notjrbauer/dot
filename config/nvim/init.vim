@@ -19,6 +19,7 @@ Plug 'Shougo/neosnippet-snippets'
 Plug 'Shougo/neoinclude.vim'
 Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
 Plug 'honza/vim-snippets'
+Plug 'nathanaelkane/vim-indent-guides'
 
 call plug#end()
 
@@ -26,8 +27,8 @@ source ~/.vim_runtime/vimrcs/basic.vim
 source ~/.vim_runtime/vimrcs/filetypes.vim
 source ~/.vim_runtime/vimrcs/plugins_config.vim
 source ~/.vim_runtime/vimrcs/extended.vim
-source ~/.config/nvim/plugin-configs/vim-notes.vim
 
+let g:enable_bold_font = 1
 function! s:fzf_statusline()
   " Override statusline as you like
   highlight fzf1 ctermfg=161 ctermbg=251
@@ -50,6 +51,8 @@ autocmd! User FzfStatusLine call <SID>fzf_statusline()
 let g:tern_request_timeout = 6000
 try
   source ~/.vim_runtime/my_configs.vim
+  source ~/.config/nvim/plugin-configs/vim-notes.vim
+  source ~/.config/nvim/plugin-configs/vim-indent-guides.vim
 
 " show completion options on <TAB>
 set wildmode=longest,list,full
