@@ -20,7 +20,9 @@ Plug 'Shougo/neoinclude.vim'
 Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
 Plug 'honza/vim-snippets'
 Plug 'nathanaelkane/vim-indent-guides'
-
+Plug 'derekwyatt/vim-scala'
+Plug 'Shougo/deoplete.nvim'
+Plug 'zchee/deoplete-go', { 'do': 'make'}
 call plug#end()
 
 source ~/.vim_runtime/vimrcs/basic.vim
@@ -88,6 +90,12 @@ imap <expr><TAB>
 
 smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+" Scala
+" Set syntax highlighting for .scala files
+autocmd BufNewFile,BufRead *.scala   set ft=scala 
+" Set syntax highlighting for scala worksheet files
+autocmd BufNewFile,BufRead *.sc      set ft=scala 
 
 catch
   echo "Error loading init.vim!"
