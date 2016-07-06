@@ -22,6 +22,7 @@ Plug 'honza/vim-snippets'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'derekwyatt/vim-scala'
 Plug 'Shougo/deoplete.nvim'
+Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
 Plug 'zchee/deoplete-go', { 'do': 'make'}
 call plug#end()
 
@@ -76,6 +77,10 @@ let g:neosnippet#snippets_directory='~/.vim/plugged/vim-snippets/snippets'
 
 " Auto start Deoplete
 let g:deoplete#enable_at_startup = 1
+let g:tern_show_signature_in_pum = 1  " This enables full signature type on autocomplete
+" Use tern_for_vim.
+let g:tern#command = ["tern"]
+let g:tern#arguments = ["--persistent"]
 
 " Plugin key-mappings.
 imap <C-k>     <Plug>(neosnippet_expand_or_jump)

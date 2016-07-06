@@ -221,15 +221,12 @@ export DOCKER_CERT_PATH=$HOME/.docker/machine/certs
 export DOCKER_TLS_VERIFY=1
 
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
-
 BULLETTRAIN_RUBY_SHOW=false
 BULLETTRAIN_NVM_SHOW=true
 
 test -e ${HOME}/.iterm2_shell_integration.zsh && source ${HOME}/.iterm2_shell_integration.zsh
 
-[ -s "/Users/johnbauer/.dnx/dnvm/dnvm.sh" ] && . "/Users/johnbauer/.dnx/dnvm/dnvm.sh" # Load dnvm
-
-
-
+# ruby
+eval "$(rbenv init -)"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
