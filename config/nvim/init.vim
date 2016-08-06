@@ -23,15 +23,31 @@ Plug 'nathanaelkane/vim-indent-guides'
 Plug 'derekwyatt/vim-scala'
 Plug 'Shougo/deoplete.nvim'
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
+Plug 'nsf/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
 Plug 'zchee/deoplete-go', { 'do': 'make'}
+Plug 'dgryski/vim-godef'
+Plug 'pangloss/vim-javascript'
+Plug 'mxw/vim-jsx'
+Plug 'fatih/vim-go'
+Plug 'fatih/molokai'
+
 call plug#end()
 
+set completeopt+=noselect
+
+" Path to python interpreter for neovim
+" MIGHT NOT NEED
+let g:python3_host_prog  = '/usr/local/bin/python3'
+" Skip the check of neovim module
+let g:python3_host_skip_check = 1
 source ~/.vim_runtime/vimrcs/basic.vim
 source ~/.vim_runtime/vimrcs/filetypes.vim
 source ~/.vim_runtime/vimrcs/plugins_config.vim
 source ~/.vim_runtime/vimrcs/extended.vim
 
+set termguicolors
 let g:enable_bold_font = 1
+
 function! s:fzf_statusline()
   " Override statusline as you like
   highlight fzf1 ctermfg=161 ctermbg=251
@@ -72,12 +88,18 @@ endfunction
 function! Multiple_cursors_after()
     let b:deoplete_disable_auto_complete = 0
 endfunction
+
+" React
+let g:jsx_ext_required = 0
 " Directory of snippets
 let g:neosnippet#snippets_directory='~/.vim/plugged/vim-snippets/snippets'
 
 " Auto start Deoplete
 let g:deoplete#enable_at_startup = 1
 let g:tern_show_signature_in_pum = 1  " This enables full signature type on autocomplete
+let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
+let g:deoplete#sources#go#use_cache = 1
+
 " Use tern_for_vim.
 let g:tern#command = ["tern"]
 let g:tern#arguments = ["--persistent"]
@@ -95,6 +117,15 @@ imap <expr><TAB>
 
 smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+" Go highlight
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_types = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_build_constraints = 1
+
 
 " Scala
 " Set syntax highlighting for .scala files

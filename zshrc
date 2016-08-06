@@ -179,6 +179,7 @@ PATH=$PATH:$HOME/Library/Haskell/bin
 PATH=$PATH:$HOME/bin
 
 export GOPATH=$HOME/go
+export GOBIN=$HOME/go/bin
 export PATH=$PATH:$GOPATH/bin
 export PATH=$PATH:/usr/local/opt/go/libexec/bin
 
