@@ -25,10 +25,10 @@ Plug 'Shougo/deoplete.nvim'
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
 Plug 'nsf/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
 Plug 'zchee/deoplete-go', { 'do': 'make'}
-Plug 'dgryski/vim-godef'
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 Plug 'fatih/vim-go'
+Plug 'dgryski/vim-godef'
 Plug 'fatih/molokai'
 
 call plug#end()
@@ -99,6 +99,7 @@ let g:deoplete#enable_at_startup = 1
 let g:tern_show_signature_in_pum = 1  " This enables full signature type on autocomplete
 let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
 let g:deoplete#sources#go#use_cache = 1
+let g:deoplete#sources#go#gocode_binary = $GOBIN
 
 " Use tern_for_vim.
 let g:tern#command = ["tern"]
@@ -125,8 +126,8 @@ let g:go_highlight_fields = 1
 let g:go_highlight_types = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
-
-
+let g:godef_split = 2
+let g:godef_same_file_in_same_window = 1
 " Scala
 " Set syntax highlighting for .scala files
 autocmd BufNewFile,BufRead *.scala   set ft=scala 
