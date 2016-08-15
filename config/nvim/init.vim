@@ -23,13 +23,14 @@ Plug 'nathanaelkane/vim-indent-guides'
 Plug 'derekwyatt/vim-scala'
 Plug 'Shougo/deoplete.nvim'
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
-Plug 'nsf/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
+Plug 'nsf/gocode', { 'rtp': 'nvim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
 Plug 'zchee/deoplete-go', { 'do': 'make'}
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 Plug 'fatih/vim-go'
 Plug 'dgryski/vim-godef'
 Plug 'fatih/molokai'
+Plug 'majutsushi/tagbar'
 
 call plug#end()
 
@@ -130,9 +131,11 @@ let g:godef_split = 2
 let g:godef_same_file_in_same_window = 1
 " Scala
 " Set syntax highlighting for .scala files
-autocmd BufNewFile,BufRead *.scala   set ft=scala 
+autocmd BufNewFile,BufRead *.scala set ft=scala 
 " Set syntax highlighting for scala worksheet files
-autocmd BufNewFile,BufRead *.sc      set ft=scala 
+autocmd BufNewFile,BufRead *.sc set ft=scala 
+autocmd BufNewFile,BufRead *.go set ft=go 
+autocmd FileType go colorscheme molokai
 
 catch
   echo "Error loading init.vim!"

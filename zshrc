@@ -180,7 +180,7 @@ PATH=$PATH:$HOME/bin
 
 export GOPATH=$HOME/go
 export GOBIN=$HOME/go/bin
-export PATH=$PATH:$GOPATH/bin
+export PATH=$PATH:$GOBIN:$GOPATH/bin
 export PATH=$PATH:/usr/local/opt/go/libexec/bin
 
  [[ -s `brew --prefix`/etc/autojump.zsh ]] && . `brew --prefix`/etc/autojump.zsh
