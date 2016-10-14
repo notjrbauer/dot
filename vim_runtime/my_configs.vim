@@ -2,7 +2,7 @@
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 
 
-syntax on
+"syntax on
 syntax enable
 
 let g:hybrid_custom_term_colors=1

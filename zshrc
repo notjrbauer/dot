@@ -54,6 +54,9 @@ setopt VI
 export EDITOR="vi"
 export NVIM_TUI_ENABLE_TRUE_COLOR=1
 
+# Segment AWS
+export AWS_DEFAULT_REGION=us-west-2
+
 setopt IGNORE_EOF
 
 # If I could disable Ctrl-s completely I would!
@@ -217,9 +220,9 @@ MANPATH="$NPM_PACKAGES/share/man:$(manpath)"
 export PATH="/usr/local/heroku/bin:$PATH"
 
 # docker defaults
-export DOCKER_HOST=tcp://192.168.99.100:2376
-export DOCKER_CERT_PATH=$HOME/.docker/machine/certs
-export DOCKER_TLS_VERIFY=1
+#export DOCKER_HOST=tcp://192.168.99.100:2376
+#export DOCKER_CERT_PATH=$HOME/.docker/machine/certs
+#export DOCKER_TLS_VERIFY=1
 
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 BULLETTRAIN_RUBY_SHOW=false
@@ -228,6 +231,7 @@ BULLETTRAIN_NVM_SHOW=true
 test -e ${HOME}/.iterm2_shell_integration.zsh && source ${HOME}/.iterm2_shell_integration.zsh
 
 # ruby
-eval "$(rbenv init -)"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+source /Users/johnbauer/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source ~/dev/src/github.com/segmentio/dotfiles/index.sh
