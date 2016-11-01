@@ -1,12 +1,14 @@
 ZSH=$HOME/.oh-my-zsh
 
-ZSH_THEME="lambda-mod"
+ZSH_THEME="pure"
+#ZSH_THEME="lambda-mod"
 #{{{ ZSH Modules
 
 autoload -U compinit promptinit zcalc zsh-mime-setup
 compinit
 promptinit
 zsh-mime-setup
+prompt pure
 
 #}}}
 
@@ -160,7 +162,7 @@ bindkey '^[[F' end-of-line
 
 # Customize to your needs...
 # export PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin
-export PATH=/opt/local/bin:/usr/local/bin:/usr/local/bin:/usr/local/sbin:/usr/local/mysql/bin:/usr/local/share/npm/bin:$PATH
+export PATH=/opt/local/bin:/usr/local/bin:/usr/local/bin:/usr/local/sbin:/usr/local/mysql/bin:/usr/local/share/npm/bin:/usr/local/go/bin:$PATH
 
 # Node modules
 #export TERM=xterm-256color
@@ -181,10 +183,16 @@ function chpwd() {
 PATH=$PATH:$HOME/Library/Haskell/bin
 PATH=$PATH:$HOME/bin
 
-export GOPATH=$HOME/go
 export GOBIN=$HOME/go/bin
-export PATH=$PATH:$GOBIN:$GOPATH/bin
-export PATH=$PATH:/usr/local/opt/go/libexec/bin
+export GOPATH=$HOME/go
+export GOROOT=/usr/local/opt/go/libexec
+export PATH=$PATH:$GOPATH/bin
+export PATH=$PATH:$GOROOT/bin
+export PATH=$PATH:$GOBIN
+#export GOPATH=$HOME/go
+#export GOROOT=/usr/local/opt/go/libexec
+#export PATH=$PATH:$GOBIN:$GOPATH/bin
+#export PATH=$PATH:$GOROOT/bin
 
  [[ -s `brew --prefix`/etc/autojump.zsh ]] && . `brew --prefix`/etc/autojump.zsh
 autoload -U compinit && compinit -u
@@ -225,6 +233,7 @@ export PATH="/usr/local/heroku/bin:$PATH"
 #export DOCKER_TLS_VERIFY=1
 
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+
 BULLETTRAIN_RUBY_SHOW=false
 BULLETTRAIN_NVM_SHOW=true
 
@@ -235,3 +244,5 @@ test -e ${HOME}/.iterm2_shell_integration.zsh && source ${HOME}/.iterm2_shell_in
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 source /Users/johnbauer/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source ~/dev/src/github.com/segmentio/dotfiles/index.sh
+
+
