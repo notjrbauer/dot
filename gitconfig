@@ -8,7 +8,7 @@
   autocrlf = false
   pager = "diff-highlight | diff-so-fancy | less --tabs=1,5 -R"
 [alias]
-
+  gui = !sh -c '/usr/local/opt/git/libexec/git-core/git-gui'
   lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
   co = checkout
   st = status -s
@@ -30,6 +30,7 @@
   graft = !legit graft \"$@\"
   tree = log --graph --full-history --all --color --pretty=tformat:"%x1b[31m%h%x09%x1b[32m%d%x1b[0m%x20%s%x20%x1b[33m(%an)%x1b[0m"
   find = log --pretty=\"format:%Cgreen%H %Cblue%s\" --name-status --grep
+  df = diff --color --color-words --abbrev
 [merge]
 	tool = opendiff
 [pager]
@@ -37,4 +38,16 @@
 	show = diff-so-fancy | less --tabs=1,5 -R
 [color]
   ui = true
+  [color "diff"]
+	meta = yellow bold
+	commit = green bold
+	frag = magenta bold
+	old = red bold
+	new = green bold
+  whitespace = red reverse
 
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 22
