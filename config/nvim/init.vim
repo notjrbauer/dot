@@ -1,8 +1,11 @@
 set runtimepath+=~/.vim_runtime
+
 call plug#begin('~/.vim/plugged')
+
 function! DoRemote(arg)
   UpdateRemotePlugins
 endfunction
+
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-notes'
@@ -25,30 +28,31 @@ Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
 Plug 'nsf/gocode', { 'rtp': 'nvim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
 Plug 'zchee/deoplete-go', { 'do': 'make'}
 Plug 'fatih/vim-go'
-"Plug 'dgryski/vim-godef'
 Plug 'jacoborus/tender.vim'
 Plug 'fatih/molokai'
 Plug 'Raimondi/delimitMate'
 Plug 'scrooloose/nerdcommenter'
 Plug 'itchyny/lightline.vim'
-"Plug 'vim-airline/vim-airline'
-"Plug 'vim-airline/vim-airline-themes'
+Plug 'chriskempson/base16-vim'
 Plug 'mxw/vim-jsx'
 Plug 'scrooloose/nerdcommenter'
 Plug 'gosukiwi/vim-atom-dark'
 Plug 'tpope/vim-commentary'
-Plug 'chrisbra/vim-diff-enhanced'
 Plug 'tpope/vim-dispatch'
 Plug 'Lokaltog/vim-distinguished'
 Plug 'millermedeiros/vim-esformatter', { 'do': 'npm install -g esformatter' }
 Plug 'nathanaelkane/vim-indent-guides'
-Plug 'jacoborus/tender.vim'
 Plug 'majutsushi/tagbar'
 Plug 'luochen1990/rainbow'
 Plug 'pangloss/vim-javascript'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 Plug 'morhetz/gruvbox'
+Plug 'endel/vim-github-colorscheme'
+Plug 'junegunn/vim-github-dashboard', { 'on': ['GHDashboard', 'GHActivity'] }
+Plug 'junegunn/vim-slash'
+Plug 'junegunn/vim-peekaboo'
+Plug 'sjl/gundo.vim'
 call plug#end()
 
 set completeopt+=noselect
@@ -61,7 +65,7 @@ let g:enable_bold_font = 1
 " MIGHT NOT NEED
 let g:python3_host_prog  = '/usr/local/bin/python3'
 " Skip the check of neovim module
-let g:python3_host_skip_check = 1
+"let g:python3_host_skip_check = 1
 source ~/.vim_runtime/vimrcs/basic.vim
 source ~/.vim_runtime/vimrcs/filetypes.vim
 source ~/.vim_runtime/vimrcs/plugins_config.vim
@@ -84,20 +88,28 @@ augroup omnifuncs
   autocmd FileType javascript setlocal omnifunc=tern#Complete
   autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
   autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+  autocmd FileType go set omnifunc=gocomplete#Complete
+
 augroup end
+
 
 autocmd! User FzfStatusLine call <SID>fzf_statusline()
 let g:tern_request_timeout = 6000
 try
   source ~/.vim_runtime/my_configs.vim
-  source ~/.config/nvim/plugin-configs/lightline.vim
 
 " show completion options on <TAB>
 set wildmode=longest,list,full
 set wildmenu
 
 au FileType javascript setlocal nofoldenable
+
 set nofoldenable    " disable folding
+set foldmethod=indent
+set noshowmode
+let g:fastfold_savehook = 1
+let g:fastfold_fold_command_suffixes = ['x','X','a','A','o','O','c','C','r','R','m','M','i','n','N']
+let g:fastfold_fold_movement_commands = [']z', '[z', 'zj', 'zk']
 
 " allow multiple cursors before and after
 function! Multiple_cursors_before()
@@ -119,24 +131,30 @@ let g:tern_show_signature_in_pum = 1  " This enables full signature type on auto
 let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
 let g:deoplete#sources#go#use_cache = 1
 let g:deoplete#sources#go#gocode_binary = $GOBIN.'/gocode'
+let g:deoplete#sources#go#json_directory = $GOPATH.'/github.com/notjrbauer/go-static'
 
 " Use tern_for_vim.
 let g:tern#command = ["tern"]
 let g:tern#arguments = ["--persistent"]
+
+" Tern shortcuts
+au FileType javascript nmap gd :TernDef<CR>
+au FileType javascript nmap <Leader>ds :TernDefSplit<CR>
+au FileType javascript nmap <Leader>dt :TernDefTab<CR>
+au FileType javascript nmap <Leader>gd :TernDoc<CR>
+au FileType javascript nmap <Leader>t :TernType<CR>
 
 " Plugin key-mappings.
 imap <C-k>     <Plug>(neosnippet_expand_or_jump)
 smap <C-k>     <Plug>(neosnippet_expand_or_jump)
 xmap <C-k>     <Plug>(neosnippet_expand_target)
 
-" SuperTab like snippets behavior.
-imap <expr><TAB>
- \ pumvisible() ? "\<C-n>" :
- \ neosnippet#expandable_or_jumpable() ?
- \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+" Bind ctrl+space to autocomplete :)
+"inoremap <C-Space> <C-n>
 
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+" deoplete tab-complete
+inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 
 " Allow Updatetime to be lower
 set updatetime=100
@@ -153,7 +171,7 @@ let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
 
 " vim-go statusline var info
-let g:go_auto_type_info = 1
+"let g:go_auto_type_info = 1
 
 " vim-go mappings
 
@@ -171,6 +189,8 @@ au FileType go nmap <Leader>dv <Plug>(go-def-vertical)
 au FileType go nmap <Leader>dt <Plug>(go-def-tab)
 au FileType go nmap <Leader>gd <Plug>(go-doc)
 au FileType go nmap <Leader>gv <Plug>(go-doc-vertical)
+let g:go_fmt_command = "goimports"
+"let g:go_term_mode = "vertical"
 
 " Scala
 " Set syntax highlighting for .scala files
@@ -179,17 +199,31 @@ autocmd BufNewFile,BufRead *.scala set ft=scala
 autocmd BufNewFile,BufRead *.sc set ft=scala
 
 
-let g:hybrid_custom_term_colors = 1
-autocmd FileType javascript colorscheme hybrid_material
-"autocmd BufNewFile,BufRead *.go set ft=go
-"autocmd FileType go colorscheme gruvbox
+"let g:hybrid_custom_term_colors = 1
+"autocmd FileType javascript colorscheme hybrid_material
+autocmd BufNewFile,BufRead *.jsx set ft=javascript
+autocmd BufNewFile,BufRead *.js set ft=javascript
+autocmd BufNewFile,BufRead *.go set ft=go
+"autocmd FileType go colorscheme tender
 
+colorscheme tender
 " for hyperterm ._.
 "highlight Pmenu guibg=black gui=bold
-let g:gruvbox_contrast_dark="medium"
-colorscheme gruvbox
+"let g:gruvbox_contrast_dark="medium"
+"colorscheme gruvbox
+"colorscheme molokai
 " Tmux Nvim Hack
 nnoremap <silent> <BS> :TmuxNavigateLeft<cr>
+" Redraw rebind
+nnoremap <S-L> :redraw!<CR><S-L>
+
+" github
+let g:github_dashboard = { 'username': $GITHUB_USER, 'password': $GITHUB_TOKEN }
+source ~/.config/nvim/plugin-configs/lightline.vim
+source ~/.config/nvim/plugin-configs/vim-slash.vim
+
+"autocmd FileType qf wincmd J
+
 catch
   echo "Error loading init.vim!"
 endtry
