@@ -146,6 +146,7 @@ bindkey '^[[F' end-of-line
 export CLICOLOR=1
 export KEYTIMEOUT=30 # Remove annoying lag from ESC
 export HIST_STAMPS="yyyy-mm-dd" # Set schema for parsing time stamps
+setopt hist_ignore_dups
 
 # Customize to your needs...
 export PATH=/opt/local/bin:/usr/local/bin:/usr/local/bin:/usr/local/sbin:/usr/local/mysql/bin:/usr/local/share/npm/bin:/usr/local/go/bin:$PATH

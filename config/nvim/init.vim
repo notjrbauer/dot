@@ -71,6 +71,7 @@ source ~/.vim_runtime/vimrcs/filetypes.vim
 source ~/.vim_runtime/vimrcs/plugins_config.vim
 source ~/.vim_runtime/vimrcs/extended.vim
 
+set tags=./tags,tags;
 
 function! s:fzf_statusline()
   " Override statusline as you like
@@ -134,6 +135,7 @@ let g:deoplete#keyword_patterns = {}
 let g:deoplete#keyword_patterns._ = '[a-zA-Z_]\k*\(?'
 let g:deoplete#enable_at_startup = 1
 let g:tern_show_signature_in_pum = 1  " This enables full signature type on autocomplete
+
 let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
 let g:deoplete#sources#go#use_cache = 1
 let g:deoplete#sources#go#gocode_binary = $GOBIN.'/gocode'
@@ -146,6 +148,8 @@ let g:deoplete#sources#go = 'vim-go'
 let g:deoplete#tag#cache_limit_size = 5000000
 " Use tern_for_vim.
 let g:tern#command = ["tern"]
+let g:tern#filetypes = [ 'jsx', 'javascript.jsx']
+
 let g:tern#arguments = ["--persistent"]
 
 " Tern shortcuts
