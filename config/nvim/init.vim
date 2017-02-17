@@ -2,14 +2,11 @@ set runtimepath+=~/.vim_runtime
 
 call plug#begin('~/.vim/plugged')
 
-function! DoRemote(arg)
-  UpdateRemotePlugins
-endfunction
 
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-notes'
-Plug 'zaiste/tmux.vim'
+Plug 'christoomey/vim-tmux-navigator'
 Plug 'isRuslan/vim-es6'
 Plug 'tpope/vim-surround'
 Plug 'easymotion/vim-easymotion'
@@ -20,14 +17,9 @@ Plug 'Konfekt/FastFold'
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
 Plug 'Shougo/neoinclude.vim'
-Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
 Plug 'honza/vim-snippets'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'derekwyatt/vim-scala'
-Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
-Plug 'nsf/gocode', { 'rtp': 'nvim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
-Plug 'zchee/deoplete-go', { 'do': 'make'}
-Plug 'fatih/vim-go'
 Plug 'jacoborus/tender.vim'
 Plug 'fatih/molokai'
 Plug 'Raimondi/delimitMate'
@@ -44,32 +36,42 @@ Plug 'millermedeiros/vim-esformatter', { 'do': 'npm install -g esformatter' }
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'majutsushi/tagbar'
 Plug 'luochen1990/rainbow'
-Plug 'pangloss/vim-javascript'
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 Plug 'morhetz/gruvbox'
 Plug 'endel/vim-github-colorscheme'
-Plug 'junegunn/vim-github-dashboard', { 'on': ['GHDashboard', 'GHActivity'] }
-Plug 'junegunn/vim-slash'
 Plug 'junegunn/vim-peekaboo'
+Plug 'zchee/deoplete-go', { 'do': 'make'}
+Plug 'fatih/vim-go'
 Plug 'sjl/gundo.vim'
+Plug 'craigemery/vim-autotag'
+Plug 'pangloss/vim-javascript'
+Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
+Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
+Plug 'jelera/vim-javascript-syntax'
+Plug 'Shougo/context_filetype.vim'
+if executable('ctags')
+  Plug 'ludovicchabant/vim-gutentags'
+  "Plug 'davidosomething/vim-gutentags', { 'branch': 'user-autocmd' }
+endif
+Plug 'othree/jspc.vim'
 call plug#end()
 
 set completeopt+=noselect
 
-let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+"let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 set termguicolors
 let g:enable_bold_font = 1
 
 " Path to python interpreter for neovim
 " MIGHT NOT NEED
 let g:python3_host_prog  = '/usr/local/bin/python3'
-" Skip the check of neovim module
-"let g:python3_host_skip_check = 1
 source ~/.vim_runtime/vimrcs/basic.vim
 source ~/.vim_runtime/vimrcs/filetypes.vim
 source ~/.vim_runtime/vimrcs/plugins_config.vim
 source ~/.vim_runtime/vimrcs/extended.vim
+" Skip the check of neovim module
+"let g:python3_host_skip_check = 1
 
 set tags=./tags,tags;
 
@@ -80,6 +82,63 @@ function! s:fzf_statusline()
   highlight fzf3 ctermfg=237 ctermbg=251
   setlocal statusline=%#fzf1#\ >\ %#fzf2#fz%#fzf3#f
 endfunction
+let g:fzf_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
+
+" Default fzf layout
+" - down / up / left / right
+let g:fzf_layout = { 'down': '~40%' }
+
+" In Neovim, you can set up fzf window using a Vim command
+let g:fzf_layout = { 'window': 'enew' }
+let g:fzf_layout = { 'window': '-tabnew' }
+
+" Customize fzf colors to match your color scheme
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
+
+let g:fzf_files_options =
+  \ '--preview "(highlight -O ansi {} || cat {}) 2> /dev/null | head -'.&lines.'"'
+
+" [Buffers] Jump to the existing window if possible
+let g:fzf_buffers_jump = 1
+
+" [[B]Commits] Customize the options used by 'git log':
+let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
+
+" [Tags] Command to generate tags file
+let g:fzf_tags_command = 'ctags -R'
+
+nnoremap <silent> <C-f> :FZF -m<cr>
+nnoremap <silent> <C-b> :Buffers<cr>
+ " Better command history with q:
+command! CmdHist call fzf#vim#command_history({'right': '40'})
+nnoremap q: :CmdHist<CR>
+
+""""""""""""""""""""""""""""""
+" => CTRL-P
+" """"""""""""""""""""""""""""""
+" "let g:ctrlp_working_path_mode = 0
+"
+" "map <leader>j :CtrlP<cr>
+" "map <c-b> :CtrlPBuffer<cr>
+"
+" "let g:ctrlp_max_height = 20
+" "let g:ctrlp_custom_ignore = 'node_modules\|^\.DS_Store\|^\.git\|^\.coffee'
+"
 
 " omnifuncs
 augroup omnifuncs
@@ -96,10 +155,10 @@ augroup end
 
 
 autocmd! User FzfStatusLine call <SID>fzf_statusline()
-let g:tern_request_timeout = 6000
+"let g:tern_request_timeout = 6000
 try
-  source ~/.vim_runtime/my_configs.vim
 
+source ~/.vim_runtime/my_configs.vim
 " show completion options on <TAB>
 set wildmode=longest,list,full
 set wildmenu
@@ -129,7 +188,7 @@ let g:neosnippet#snippets_directory='~/.vim/plugged/vim-snippets/snippets'
 
 " Auto start Deoplete
 let g:deoplete#auto_complete_delay = 0
-let g:deoplete#auto_refresh_delay = 1000
+let g:deoplete#auto_refresh_delay = 50
 let g:deoplete#enable_camel_case = 1
 let g:deoplete#keyword_patterns = {}
 let g:deoplete#keyword_patterns._ = '[a-zA-Z_]\k*\(?'
@@ -137,15 +196,15 @@ let g:deoplete#enable_at_startup = 1
 let g:tern_show_signature_in_pum = 1  " This enables full signature type on autocomplete
 
 let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
-let g:deoplete#sources#go#use_cache = 1
-let g:deoplete#sources#go#gocode_binary = $GOBIN.'/gocode'
-let g:deoplete#sources#go#json_directory = $GOPATH.'/github.com/notjrbauer/go-static'
+let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
+let g:deoplete#sources#go#json_directory = $GOPATH.'/src/github.com/notjrbauer/go-static'
 let g:deoplete#omni#functions = get(g:, 'deoplete#omni#functions', {})
 let g:deoplete#omni#functions.javascript = [
   \ 'tern#Complete'
 \]
 let g:deoplete#sources#go = 'vim-go'
-let g:deoplete#tag#cache_limit_size = 5000000
+let g:deoplete#sources#go#use_cache = 1
+let g:deoplete#tag#cache_limit_size = 500000
 " Use tern_for_vim.
 let g:tern#command = ["tern"]
 let g:tern#filetypes = [ 'jsx', 'javascript.jsx']
@@ -170,7 +229,7 @@ imap <expr><C-k>   pumvisible() ? "\<C-p>" : "\<C-k>"
 
 " Undo completion
  inoremap <expr><C-g> deoplete#undo_completion()
- 
+
 " Redraw candidates
  inoremap <expr><C-l> deoplete#refresh()
 
@@ -210,7 +269,7 @@ inoremap <expr><S-Tab>  pumvisible() ? "\<C-p>" : "\<C-h>"
 function! s:is_whitespace()
 	let col = col('.') - 1
 	return ! col || getline('.')[col - 1] =~? '\s'
-endfunctio/
+endfunction/
 
 
 " Allow Updatetime to be lower
@@ -260,7 +319,6 @@ autocmd BufNewFile,BufRead *.sc set ft=scala
 "autocmd FileType javascript colorscheme hybrid_material
 autocmd BufNewFile,BufRead *.jsx set ft=javascript
 autocmd BufNewFile,BufRead *.js set ft=javascript
-autocmd BufNewFile,BufRead *.go set ft=go
 "autocmd FileType go colorscheme tender
 
 colorscheme tender
@@ -277,9 +335,11 @@ nnoremap <S-L> :redraw!<CR><S-L>
 " github
 let g:github_dashboard = { 'username': $GITHUB_USER, 'password': $GITHUB_TOKEN }
 source ~/.config/nvim/plugin-configs/lightline.vim
-source ~/.config/nvim/plugin-configs/vim-slash.vim
+"source ~/.config/nvim/plugin-configs/vim-slash.vim
+source ~/.config/nvim/plugin-configs/tag.bar.vim
 
 "autocmd FileType qf wincmd J
+
 
 catch
   echo "Error loading init.vim!"

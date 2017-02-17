@@ -5,10 +5,6 @@ ZSH_THEME="pure"
 #{{{ ZSH Modules
 
 autoload -U compinit promptinit zcalc zsh-mime-setup
-compinit
-promptinit
-zsh-mime-setup
-prompt pure
 
 #}}}
 
@@ -155,10 +151,9 @@ export PATH=/opt/local/bin:/usr/local/bin:/usr/local/bin:/usr/local/sbin:/usr/lo
 export NODE_PATH=/usr/local/bin
 
 PATH=$PATH:$HOME/bin
-export GOPATH=$HOME/go
-export GOROOT=/usr/local/opt/go/libexec
-export PATH=$PATH:$GOPATH/bin
-export PATH=$PATH:$GOROOT/bin
+export GOPATH=$HOME/dev
+export GOROOT=/usr/local/go
+export PATH=$GOPATH/bin:$PATH
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
@@ -210,4 +205,5 @@ source ~/.nvm/nvm.sh
 if which goenv > /dev/null; then eval "$(goenv init -)"; fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-source ~/dev/src/github.com/segmentio/dotfiles/index.sh
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"

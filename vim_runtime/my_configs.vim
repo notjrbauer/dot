@@ -7,7 +7,7 @@ syntax enable
 
 let g:hybrid_custom_term_colors=1
 set background=dark
-colorscheme hybrid_reverse
+"colorscheme hybrid_reverse
 
 set laststatus=2
 set tabstop=2                 " size of a hard tabstop
@@ -53,8 +53,16 @@ set undolevels=1000
 set undoreload=10000
 set backupdir=~/.vim/backup/
 set directory=~/.vim/backup/
+j
+fun! <SID>StripTrailingWhitespaces()
+    let l = line(".")
+    let c = col(".")
+    %s/\s\+$//e
+    call cursor(l, c)
+endfun
 
-autocmd FileType c,cpp,python,ruby,java,js,javascript autocmd BufWritePre * :%s/\s\+$//e
+autocmd BufWritePre * :call <SID>StripTrailingWhitespaces()
+
 let g:airline_theme = 'hybridline'
 
 filetype plugin on
