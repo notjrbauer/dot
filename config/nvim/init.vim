@@ -50,6 +50,22 @@ Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
 Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
 Plug 'jelera/vim-javascript-syntax'
 Plug 'Shougo/context_filetype.vim'
+Plug 'nsf/gocode', { 'rtp': 'nvim', 'do': '~/.vim/plugged/gocode/nvim/symlink.sh' }
+Plug 'w0ng/vim-hybrid'
+Plug 'rhysd/try-colorscheme.vim'
+Plug 'vim-scripts/Wombat'
+Plug 'altercation/vim-colors-solarized'
+Plug 'nanotech/jellybeans.vim'
+Plug 'vim-scripts/twilight'
+Plug 'jonathanfilip/vim-lucius'
+Plug 'vim-scripts/rdark'
+Plug 'djjcast/mirodark'
+Plug 'sjl/badwolf'
+Plug 'cocopon/iceberg.vim' " A dark color scheme for Vim, came from Antarctica
+Plug 'reedes/vim-colors-pencil'
+Plug 'freeo/vim-kalisi'
+Plug 'rhysd/vim-color-splatoon'
+Plug 'mhinz/vim-janah'
 if executable('ctags')
   Plug 'ludovicchabant/vim-gutentags'
   "Plug 'davidosomething/vim-gutentags', { 'branch': 'user-autocmd' }
@@ -120,7 +136,7 @@ let g:fzf_buffers_jump = 1
 let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
 
 " [Tags] Command to generate tags file
-let g:fzf_tags_command = 'ctags -R'
+"let g:fzf_tags_command = 'ctags -R'
 
 nnoremap <silent> <C-f> :FZF -m<cr>
 nnoremap <silent> <C-b> :Buffers<cr>
@@ -202,7 +218,7 @@ let g:deoplete#omni#functions = get(g:, 'deoplete#omni#functions', {})
 let g:deoplete#omni#functions.javascript = [
   \ 'tern#Complete'
 \]
-let g:deoplete#sources#go = 'vim-go'
+"let g:deoplete#sources#go = 'vim-go'
 let g:deoplete#sources#go#use_cache = 1
 let g:deoplete#tag#cache_limit_size = 500000
 " Use tern_for_vim.
@@ -224,8 +240,8 @@ smap <C-k>     <Plug>(neosnippet_expand_or_jump)
 xmap <C-k>     <Plug>(neosnippet_expand_target)
 
 " Movement within 'ins-completion-menu'
-imap <expr><C-j>   pumvisible() ? "\<C-n>" : "\<C-j>"
-imap <expr><C-k>   pumvisible() ? "\<C-p>" : "\<C-k>"
+"imap <expr><C-j>   pumvisible() ? "\<C-n>" : "\<C-j>"
+"imap <expr><C-k>   pumvisible() ? "\<C-p>" : "\<C-k>"
 
 " Undo completion
  inoremap <expr><C-g> deoplete#undo_completion()
@@ -276,10 +292,13 @@ endfunction/
 set updatetime=100
 
 " Gitgutter configs
-let g:gitgutter_highlight_lines = 1
+"let g:gitgutter_highlight_lines = 1
 
 " Go highlight
+let g:go_auto_type_info = 1
 let g:go_highlight_functions = 1
+let g:go_highlight_extra_types = 1
+
 let g:go_highlight_methods = 1
 let g:go_highlight_fields = 1
 let g:go_highlight_types = 1
@@ -322,11 +341,6 @@ autocmd BufNewFile,BufRead *.js set ft=javascript
 "autocmd FileType go colorscheme tender
 
 colorscheme tender
-" for hyperterm ._.
-"highlight Pmenu guibg=black gui=bold
-"let g:gruvbox_contrast_dark="medium"
-"colorscheme gruvbox
-"colorscheme molokai
 " Tmux Nvim Hack
 nnoremap <silent> <BS> :TmuxNavigateLeft<cr>
 " Redraw rebind
