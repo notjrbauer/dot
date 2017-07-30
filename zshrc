@@ -1,6 +1,6 @@
 ZSH=$HOME/.oh-my-zsh
 
-ZSH_THEME="pure"
+#ZSH_THEME="pure"
 #ZSH_THEME="lambda-mod"
 #{{{ ZSH Modules
 
@@ -129,10 +129,10 @@ COMPLETION_WAITING_DOTS="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # plugins=(git brew vi-mode)
-plugins=(autojump history vi-mode zsh-syntax-highlighting)
+#plugins=(autojump history vi-mode zsh-syntax-highlighting)
 #{{{ Shell Conveniences
 
-source $ZSH/oh-my-zsh.sh
+#source $ZSH/oh-my-zsh.sh
 autoload -U compinit && compinit -u
 bindkey "\e\e[D" backward-word # alt + <-
 bindkey "\e\e[C" forward-word # alt + ->
@@ -152,7 +152,8 @@ export NODE_PATH=/usr/local/bin
 
 PATH=$PATH:$HOME/bin
 export GOPATH=$HOME/dev
-export GOROOT=/usr/local/go
+export GOROOT=$(go env GOROOT)
+#export GOROOT=/usr/local/go
 export PATH=$GOPATH/bin:$PATH
 
 ### Added by the Heroku Toolbelt
@@ -199,11 +200,9 @@ BULLETTRAIN_RUBY_SHOW=false
 BULLETTRAIN_NVM_SHOW=true
 
 
-source ~/.nvm/nvm.sh
-
-# goenv version manager
-if which goenv > /dev/null; then eval "$(goenv init -)"; fi
+#source ~/.nvm/nvm.sh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+source "$HOME/.zprezto/init.zsh"
 
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+#test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"

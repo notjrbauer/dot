@@ -3,6 +3,11 @@ set runtimepath+=~/.vim_runtime
 call plug#begin('~/.vim/plugged')
 
 
+Plug 'neovimhaskell/haskell-vim'
+Plug 'eagletmt/neco-ghc'
+Plug 'xolox/vim-lua-ftplugin'
+Plug 'sheerun/vim-polyglot'
+Plug 'jelera/vim-javascript-syntax'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-notes'
@@ -45,7 +50,6 @@ Plug 'zchee/deoplete-go', { 'do': 'make'}
 Plug 'fatih/vim-go'
 Plug 'sjl/gundo.vim'
 Plug 'craigemery/vim-autotag'
-Plug 'pangloss/vim-javascript'
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install' }
 Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
 Plug 'jelera/vim-javascript-syntax'
@@ -224,8 +228,25 @@ let g:deoplete#tag#cache_limit_size = 500000
 " Use tern_for_vim.
 let g:tern#command = ["tern"]
 let g:tern#filetypes = [ 'jsx', 'javascript.jsx']
-
 let g:tern#arguments = ["--persistent"]
+
+" deoplete lua
+let g:lua_check_syntax = 0
+let g:lua_complete_omni = 1
+let g:lua_complete_dynamic = 0
+let g:lua_define_completion_mappings = 0
+let g:deoplete#omni#functions.lua = 'xolox#lua#omnifunc'
+
+" Disable haskell-vim omnifunc
+let g:haskellmode_completion_ghc = 0
+let g:haskell_enable_quantification = 1   " to enable highlighting of `forall`
+let g:haskell_enable_recursivedo = 1      " to enable highlighting of `mdo` and `rec`
+let g:haskell_enable_arrowsyntax = 1      " to enable highlighting of `proc`
+let g:haskell_enable_pattern_synonyms = 1 " to enable highlighting of `pattern`
+let g:haskell_enable_typeroles = 1        " to enable highlighting of type roles
+let g:haskell_enable_static_pointers = 1  " to enable highlighting of `static`
+let g:haskell_backpack = 1                " to enable highlighting of backpack keywords
+autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 
 " Tern shortcuts
 au FileType javascript nmap gd :TernDef<CR>
@@ -350,7 +371,7 @@ nnoremap <S-L> :redraw!<CR><S-L>
 let g:github_dashboard = { 'username': $GITHUB_USER, 'password': $GITHUB_TOKEN }
 source ~/.config/nvim/plugin-configs/lightline.vim
 "source ~/.config/nvim/plugin-configs/vim-slash.vim
-source ~/.config/nvim/plugin-configs/tag.bar.vim
+"source ~/.config/nvim/plugin-configs/tag.bar.vim
 
 "autocmd FileType qf wincmd J
 
