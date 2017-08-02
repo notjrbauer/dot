@@ -168,21 +168,6 @@ function cover () {
   godep go test -coverprofile=$t $@ && go tool cover -html=$t && unlink $t
 }
 
-# Vim in terminal
-# ESC to quit
-bindkey -v
-
-precmd() { RPROMPT="" }
-function zle-line-init zle-keymap-select {
-   VIM_PROMPT="%{$fg_bold[yellow]%} [% NORMAL]%  %{$reset_color%}"
-   RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(main|viins)/} $EPS1"
-   zle reset-prompt
-}
-
-zle -N zle-line-init
-zle -N zle-keymap-select
-bindkey -M viins 'jj' vi-cmd-mode
-
 # Node
 NPM_PACKAGES="/Users/johnbauer/.npm-packages"
 NODE_PATH="$NPM_PACKAGES/lib/node_modules:$NODE_PATH"
@@ -202,7 +187,25 @@ BULLETTRAIN_NVM_SHOW=true
 
 #source ~/.nvm/nvm.sh
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
 source "$HOME/.zprezto/init.zsh"
 
-#test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+#
+# Vim in terminal
+# ESC to quit
+bindkey -v
+
+precmd() { RPROMPT="" }
+function zle-line-init zle-keymap-select {
+   VIM_PROMPT="%{$fg_bold[yellow]%} [% NORMAL]%  %{$reset_color%}"
+   RPS1="${${KEYMAP/vicmd/⚡}/(main|viins)/}"
+   zle reset-prompt
+}
+
+zle -N zle-line-init
+zle -N zle-keymap-select
+bindkey -M viins 'jj' vi-cmd-mode
+
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"

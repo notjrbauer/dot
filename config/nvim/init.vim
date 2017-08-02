@@ -2,7 +2,7 @@ set runtimepath+=~/.vim_runtime
 
 call plug#begin('~/.vim/plugged')
 
-
+Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'neovimhaskell/haskell-vim'
 Plug 'eagletmt/neco-ghc'
 Plug 'xolox/vim-lua-ftplugin'
@@ -327,7 +327,7 @@ let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
 
 " vim-go statusline var info
-"let g:go_auto_type_info = 1
+let g:go_auto_type_info = 1
 
 " vim-go mappings
 
@@ -373,6 +373,11 @@ source ~/.config/nvim/plugin-configs/lightline.vim
 "source ~/.config/nvim/plugin-configs/vim-slash.vim
 "source ~/.config/nvim/plugin-configs/tag.bar.vim
 
+" Nertree 
+let g:NERDTreeWinPos = "left"
+let NERDTreeMinimalUI = 1
+let NERDTreeDirArrows = 1
+let NERDTreeAutoDeleteBuffer = 1
 "autocmd FileType qf wincmd J
 
 

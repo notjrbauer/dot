@@ -1,5 +1,5 @@
 [user]
-	email = notjrbauer@gmail.com
+	email = jbauer@cloudflare.com
 	name = notjrbauer
 [mergetool]
   keepBackup = false
@@ -7,7 +7,7 @@
   editor = /usr/local/bin/nvim
   autocrlf = false
   pager = "diff-highlight | diff-so-fancy | less --tabs=1,5 -R"
-	excludesfile = /Users/johnbauer/.global_ignore
+	excludesfile = /Users/johnbauer/.gitignore
 [alias]
   gui = !sh -c '/usr/local/opt/git/libexec/git-core/git-gui'
   lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
