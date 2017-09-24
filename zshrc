@@ -1,4 +1,4 @@
-ZSH=$HOME/.oh-my-zsh
+#ZSH=$HOME/.oh-my-zsh
 
 #ZSH_THEME="pure"
 #ZSH_THEME="lambda-mod"
@@ -151,10 +151,10 @@ export PATH=/opt/local/bin:/usr/local/bin:/usr/local/bin:/usr/local/sbin:/usr/lo
 export NODE_PATH=/usr/local/bin
 
 PATH=$PATH:$HOME/bin
-export GOPATH=$HOME/dev
-export GOROOT=$(go env GOROOT)
+export GOPATH=$HOME/cf-repos
 #export GOROOT=/usr/local/go
 export PATH=$GOPATH/bin:$PATH
+export GOROOT=$(go env GOROOT)
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
@@ -196,11 +196,11 @@ source "$HOME/.zprezto/init.zsh"
 # ESC to quit
 bindkey -v
 
-precmd() { RPROMPT="" }
+# precmd() { RPROMPT="" }
 function zle-line-init zle-keymap-select {
-   VIM_PROMPT="%{$fg_bold[yellow]%} [% NORMAL]%  %{$reset_color%}"
-   RPS1="${${KEYMAP/vicmd/⚡}/(main|viins)/}"
-   zle reset-prompt
+    RPS1="${${KEYMAP/vicmd/-- NORMAL --}/(main|viins)/-- INSERT --}"
+    RPS2=$RPS1
+    zle reset-prompt
 }
 
 zle -N zle-line-init

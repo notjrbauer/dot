@@ -1,7 +1,7 @@
 let g:lightline = {
-      \ 'colorscheme': 'wombat',
+      \ 'colorscheme': 'tender',
       \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ], ['ctrlpmark'] ],
+      \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ], ['ctrlpmark', 'go'] ],
       \   'right': [ [ 'syntastic', 'lineinfo' ], ['percent'], [ 'fileformat', 'fileencoding', 'filetype' ] ]
       \ },
       \ 'component_function': {
@@ -11,13 +11,10 @@ let g:lightline = {
       \   'filetype': 'LightlineFiletype',
       \   'fileencoding': 'LightlineFileencoding',
       \   'mode': 'LightlineMode',
-      \   'ctrlpmark': 'CtrlPMark',
-      \ },
-      \ 'component_expand': {
-      \   'syntastic': 'SyntasticStatuslineFlag',
+      \   'neomake': 'LightlineNeomake'
       \ },
       \ 'component_type': {
-      \   'syntastic': 'error',
+      \   'neomake': 'error',
       \ },
       \ 'subseparator': { 'left': '|', 'right': '|' }
       \ }
@@ -54,6 +51,26 @@ function! LightlineFugitive()
   endtry
   return ''
 endfunction
+
+function LightlineNeomake()
+  if !exists(':Neomake')
+    return ''
+  endif
+  let counts = neomake#statusline#LoclistCounts()
+  let warnings = get(counts, 'W', 0)
+  let errors = get(counts, 'E', 0)
+  if warnings == 0 && errors == 0
+    return ''
+  else
+    let first = ' ['.getloclist(0)[0].lnum.']'
+    if errors == 0
+      return 'W:'.warnings.first
+    else
+      return 'E:'.errors.first
+    endif
+  endif
+endfunction
+
 
 function! LightlineFileformat()
   return winwidth(0) > 70 ? &fileformat : ''
