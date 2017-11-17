@@ -2,6 +2,9 @@ set runtimepath+=~/.vim_runtime
 
 call plug#begin('~/.vim/plugged')
 
+Plug 'rakr/vim-one'
+Plug 'w0rp/ale'
+Plug 'tpope/vim-surround'
 Plug 'rakr/vim-two-firewatch'
 Plug 'albertorestifo/github.vim'
 Plug 'junegunn/vim-slash'
@@ -18,12 +21,13 @@ Plug 'gosukiwi/vim-atom-dark'
 Plug 'w0ng/vim-hybrid'
 Plug 'itchyny/lightline.vim'
 
-" Dependencies
+"" Dependencies
 Plug 'Shougo/neocomplcache'        " Depenency for Shougo/neosnippet
 Plug 'godlygeek/tabular'           " This must come before plasticboy/vim-markdown
 Plug 'tpope/vim-rhubarb'           " Depenency for tpope/fugitive
 
-" General plugins
+"" General plugins
+Plug 'easymotion/vim-easymotion'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'  " Default snippets for many languages
@@ -66,7 +70,7 @@ Plug 'zchee/deoplete-go', { 'do': 'make'}
 Plug 'zchee/deoplete-jedi'
 Plug 'edkolev/tmuxline.vim'
 
-" Colorschemes
+"" Colorschemes
 Plug 'NLKNguyen/papercolor-theme'
 
 call plug#end()
@@ -79,8 +83,11 @@ set smartindent                   " enable smart indentation
 set autoread                      " reload file if the file changes on the disk
 set autowrite                     " write when switching buffers
 set autowriteall                  " write on :quit
-set clipboard=unnamedplus
+set clipboard+=unnamed
+
 "set colorcolumn=81                " highlight the 80th column as an indicator
+"
+set noswapfile
 set completeopt-=preview          " remove the horrendous preview window
 set cursorline                    " highlight the current line for the cursor
 set encoding=utf-8
@@ -118,9 +125,21 @@ set undolevels=1000
 set undoreload=10000
 set backupdir=~/.vim/backup/
 set directory=~/.vim/backup/
+" Time out on key codes but not mappings. Basically this makes terminal Vim work sanely. (by Steve Losh)
+set notimeout
+set ttimeout
+set ttimeoutlen=10
+
+" ---------------------------------------------------------------------------------------------------------------------
+" 2.7 Filetype settings {{{
+" ---------------------------------------------------------------------------------------------------------------------
+filetype plugin on
+filetype indent on
+"}}}
 
 " When searching try to be smart about cases
-set smartcase
+"set smartcase
+set ignorecase
 
 " Highlight search results
 set hlsearch
@@ -182,6 +201,43 @@ if has("win16") || has("win32")
 else
     set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
 endif
+set suffixes=~,.aux,.bak,.bkp,.dvi,.hi,.o,.pdf,.gz,.idx,.log,.ps,.swp,.tar,.ilg,.bbl,.toc,.ind
+set wildmenu                                                 " show a navigable menu for tab completion
+set wildcharm=<Tab>
+set wildmode=list:longest
+" set wildmode=longest,list,full
+set wildignore+=log/**,node_modules/**,target/**,tmp/**,*.rbc
+set wildignore+=*.egg,*.egg-info
+set wildignore+=*.gem
+set wildignore+=*.gem
+set wildignore+=*.javac
+set wildignore+=*.png,*.jpg,*.gif
+set wildignore+=*.png,*.jpg,*.gif
+set wildignore+=*.pyc
+set wildignore+=*.so,*.swp,*.zip,*/.Trash/**,*.pdf,*.dmg,*/Library/**,*/.rbenv/**
+set wildignore+=*/.nx/**,*.app
+set wildignore+=*DS_Store*
+set wildignore+=*sass-cache*
+set wildignore+=*vim/backups*
+set wildignore+=.coverage
+set wildignore+=.coverage/**
+set wildignore+=.env
+set wildignore+=.env-pypy
+set wildignore+=.env[0-9]+
+set wildignore+=.git,.gitkeep
+set wildignore+=.idea/**
+set wildignore+=.sass-cache/
+set wildignore+=.tmp
+set wildignore+=.tox/**
+set wildignore+=.vagrant/**
+set wildignore+=.webassets-cache/
+set wildignore+=__pycache__/
+set wildignore+=log/**
+set wildignore+=tmp/**
+set wildignore+=vendor/cache/**
+set wildignore+=vendor/rails/**
+set wildignore=*.o,*.obj,*~ "stuff to ignore when tab completing
+" }}}
 
 "autocmd BufReadPost * if @% !~# '\.git[\/\\]COMMIT_EDITMSG$' && line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 
@@ -219,7 +275,8 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 " neovim specific settings
 if has('nvim')
     " true color
-    set termguicolors
+    "let $NVIM_TUI_ENABLE_CURSOR_SHAPE = 1
+    "set guicursor= " allow native terminal to dictate cursor
 
     " Set the Python binaries neovim is using. Please note that you will need to
     " install the neovim package for these binaries separately like this for
@@ -227,15 +284,156 @@ if has('nvim')
     " pip3.6 install -U neovim
     let g:python_host_prog = '/usr/local/bin/python2.7'
     let g:python3_host_prog = '/usr/local/bin/python3.6'
+    let g:loaded_python_provider=1
+    let g:python_host_skip_check=1                        " Skip python 2 host check
+    set inccommand=nosplit
 endif
+
+" -----------------------------------------------------
+" 2.12 True colors settings {{{
+" -----------------------------------------------------
+"if (empty($TMUX))
+  if (has("nvim"))
+  "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
+  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+  endif
+  "For Neovim > 0.1.5 and Vim > patch 7.4.1799 < https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162 >
+  "Based on Vim patch 7.4.1770 (`guicolors` option) < https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd >
+  " < https://github.com/neovim/neovim/wiki/Following-HEAD#20160511 >
+  if (has("termguicolors"))
+    set termguicolors
+  endif
+"endif
 
 imap jj <esc>
 
 " Path to python interpreter for neovim
 " MIGHT NOT NEED
 let g:tern_show_signature_in_pum = 1  " This enables full signature type on autocomplete
-let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
+"let g:deoplete#sources#go#use_cache = 1
+"let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
 let g:deoplete#sources#go#json_directory = $GOPATH.'/src/github.com/notjrbauer/go-static'
+setlocal omnifunc=go#complete#Complete
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
+let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
+let g:deoplete#sources = {}
+let g:deoplete#sources.go = ['buffer', 'go']
+
+" ---
+
+" General settings " {{{
+" ---
+" let g:deoplete#auto_complete_delay = 50  " Default is 50
+" let g:deoplete#auto_refresh_delay = 500  " Default is 500
+let g:deoplete#sources = get(g:, 'deoplete#sources', {})
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#enable_refresh_always = 1
+let g:deoplete#enable_camel_case = 1
+let g:deoplete#max_abbr_width = 35
+let g:deoplete#max_menu_width = 30
+let g:deoplete#skip_chars = ['(', ')', '<', '>']
+let g:deoplete#tag#cache_limit_size = 800000
+let g:deoplete#file#enable_buffer_path = 1
+
+let g:deoplete#sources#jedi#statement_length = 30
+let g:deoplete#sources#jedi#show_docstring = 1
+let g:deoplete#sources#jedi#short_types = 1
+
+call deoplete#custom#set('_', 'min_pattern_length', 1)
+
+" }}}
+"
+" Limit Sources " {{{
+" ---
+
+let g:deoplete#sources#go = 'vim-go'
+" let g:deoplete#sources.javascript = ['file', 'ternjs']
+" let g:deoplete#sources.jsx = ['file', 'ternjs']
+
+let g:deoplete#ignore_sources = get(g:, 'deoplete#ignore_sources', {})
+" let g:deoplete#ignore_sources.html = ['syntax']
+" let g:deoplete#ignore_sources.python = ['syntax']
+
+" call deoplete#custom#set('_', 'disabled_syntaxes', ['Comment', 'String'])
+
+" }}}
+" Omni functions and patterns " {{{
+" ---
+" let g:deoplete#keyword_patterns = {}
+" let g:deoplete#keyword_patterns._ = '[a-zA-Z_]\k*\(?'
+
+let g:deoplete#omni#functions = get(g:, 'deoplete#omni#functions', {})
+let g:deoplete#omni#functions.css = 'csscomplete#CompleteCSS'
+let g:deoplete#omni#functions.html = 'htmlcomplete#CompleteTags'
+let g:deoplete#omni#functions.markdown = 'htmlcomplete#CompleteTags'
+" let g:deoplete#omni#functions.javascript =
+"	\ [ 'tern#Complete', 'jspc#omni', 'javascriptcomplete#CompleteJS' ]
+
+let g:deoplete#omni_patterns = get(g:, 'deoplete#omni_patterns', {})
+let g:deoplete#omni_patterns.html = '<[^>]*'
+" let g:deoplete#omni_patterns.javascript = '[^. *\t]\.\w*'
+" let g:deoplete#omni_patterns.javascript = '[^. \t]\.\%\(\h\w*\)\?'
+let g:deoplete#omni_patterns.php =
+	\ '\h\w*\|[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
+
+let g:deoplete#omni#input_patterns = get(g:, 'deoplete#omni#input_patterns', {})
+let g:deoplete#omni#input_patterns.xml = '<[^>]*'
+let g:deoplete#omni#input_patterns.md = '<[^>]*'
+let g:deoplete#omni#input_patterns.css  = '^\s\+\w\+\|\w\+[):;]\?\s\+\w*\|[@!]'
+let g:deoplete#omni#input_patterns.scss = '^\s\+\w\+\|\w\+[):;]\?\s\+\w*\|[@!]'
+let g:deoplete#omni#input_patterns.sass = '^\s\+\w\+\|\w\+[):;]\?\s\+\w*\|[@!]'
+let g:deoplete#omni#input_patterns.python = ''
+let g:deoplete#omni#input_patterns.javascript = ''
+
+" }}}
+" Ranking and Marks " {{{
+" Default rank is 100, higher is better.
+call deoplete#custom#set('omni',          'mark', '⌾')
+call deoplete#custom#set('ternjs',        'mark', '⌁')
+call deoplete#custom#set('go',        		'mark', '⌁')
+call deoplete#custom#set('vim-go',        'mark', '⌁')
+call deoplete#custom#set('jedi',          'mark', '⌁')
+call deoplete#custom#set('vim',           'mark', '⌁')
+call deoplete#custom#set('neosnippet',    'mark', '⌘')
+call deoplete#custom#set('tag',           'mark', '⌦')
+call deoplete#custom#set('around',        'mark', '↻')
+call deoplete#custom#set('buffer',        'mark', 'ℬ')
+call deoplete#custom#set('tmux-complete', 'mark', '⊶')
+call deoplete#custom#set('syntax',        'mark', '♯')
+
+call deoplete#custom#set('ternjs',        'rank', 620)
+call deoplete#custom#set('go',        		'rank', 618)
+call deoplete#custom#set('vim-go',        'rank', 618)
+call deoplete#custom#set('jedi',          'rank', 610)
+call deoplete#custom#set('omni',          'rank', 600)
+call deoplete#custom#set('neosnippet',    'rank', 510)
+call deoplete#custom#set('member',        'rank', 500)
+call deoplete#custom#set('file_include',  'rank', 420)
+call deoplete#custom#set('file',          'rank', 410)
+call deoplete#custom#set('tag',           'rank', 400)
+call deoplete#custom#set('around',        'rank', 330)
+call deoplete#custom#set('buffer',        'rank', 320)
+call deoplete#custom#set('dictionary',    'rank', 310)
+call deoplete#custom#set('tmux-complete', 'rank', 300)
+call deoplete#custom#set('syntax',        'rank', 200)
+call deoplete#custom#set('vim',           'rank', 130)
+
+" }}}
+" Matchers and Converters " {{{
+" ---
+
+" Default sorters: ['sorter_rank']
+" Default matchers: ['matcher_length', 'matcher_fuzzy']
+
+call deoplete#custom#set('_', 'converters', [
+	\ 'converter_remove_paren',
+	\ 'converter_remove_overlap',
+	\ 'converter_truncate_abbr',
+	\ 'converter_truncate_menu',
+	\ 'converter_auto_delimiter',
+	\ ])
+
 
 " deoplete tab-complete
 inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
@@ -279,12 +477,19 @@ nnoremap <silent> <leader>th :call neoterm#close()<cr>
 syntax enable
 
 
-
+set showmode                                " Always show mode
+set nostartofline                           " Prevent cursor from moving to beginning of line when switching buffers
+set synmaxcol=160                           " Don't try to syntax highlight minified files
 " Set the leader button
+set encoding=utf-8                          " The encoding displayed.
+set fileencoding=utf-8                      " The encoding written to file.
+scriptencoding utf-8                        " Set utf-8 as default script encoding
+
+set shell=/bin/zsh                          " Setting shell to zsh
 let mapleader = ','
 
 " Autosave buffers before leaving them
-autocmd BufLeave * silent! :wa
+"autocmd BufLeave * silent! :wa
 
 " Remove trailing white spaces on save
 autocmd BufWritePre * :%s/\s\+$//e
@@ -295,19 +500,45 @@ nnoremap <space> zz
 "----------------------------------------------
 " Colors
 "----------------------------------------------
-set background=dark
-colorscheme tender
+"set background=dark
+"colorscheme tender
+"colorscheme tender
+"colorscheme github
+set background=light
+colorscheme one
+"colorscheme two-firewatch
+"let g:two_firewatch_italics=1
+
+"colorscheme  PaperColor
+"let g:PaperColor_Theme_Options = {
+"  \   'language': {
+"  \     'python': {
+"  \       'highlight_builtins' : 1
+"  \     },
+"  \     'cpp': {
+"  \       'highlight_standard_library': 1
+"  \     },
+"  \     'c': {
+"  \       'highlight_builtins' : 1
+"  \     },
+"  \     'go': {
+"  \       'highlight_builtins' : 1
+"  \     }
+"  \   }
+"  \ }
 
 " Override the search highlight color with a combination that is easier to
 " read. The default PaperColor is dark green backgroun with black foreground.
 "
 " Reference:
 " - http://vim.wikia.com/wiki/Xterm256_color_names_for_console_Vim
-highlight Search guibg=DeepPink4 guifg=White ctermbg=53 ctermfg=White
+"highlight Search guibg=DeepPink4 guifg=White ctermbg=53 ctermfg=White
 
 " Toggle background with <leader>bg
 map <leader>bg :let &background = (&background == "dark"? "light" : "dark")<cr>
 
+" Highlight all sql and psql
+let g:sql_type_default = 'pgsql'
 "----------------------------------------------
 " Searching
 "----------------------------------------------
@@ -397,8 +628,23 @@ endfunction
 " Show status bar by default.
 set laststatus=2
 let g:lightline = {
-      \ 'colorscheme': 'wombat',
-      \ }
+    \ 'colorscheme': 'tenderplus',
+    \ 'active': {
+    \   'left': [['mode', 'paste'], ['filename', 'modified']],
+    \   'right': [['lineinfo'], ['percent'], ['readonly', 'linter_warnings', 'linter_errors', 'linter_ok']]
+    \ },
+    \ 'component_function': {
+    \   'linter_warnings': 'LightlineLinterWarnings',
+    \   'linter_errors': 'LightlineLinterErrors',
+    \   'linter_ok': 'LightlineLinterOK'
+    \ },
+    \ 'component_type': {
+    \   'readonly': 'error',
+    \   'linter_warnings': 'warning',
+    \   'linter_errors': 'error',
+    \   'linter_ok': 'ok'
+    \ },
+    \}
 
 "" Enable top tabline.
 "let g:airline#extensions#tabline#enabled = 1
@@ -467,7 +713,9 @@ let g:calendar_google_task = 1
 "----------------------------------------------
 " Plugin: 'junegunn/fzf.vim'
 "----------------------------------------------
-nnoremap <c-f> :FZF<cr>
+nnoremap <c-f> :Ag<cr>
+let g:fzf_buffers_jump = 1
+let g:fzf_tags_command = 'ctags -R'
 
 "----------------------------------------------
 " Plugin: 'majutsushi/tagbar'
@@ -531,7 +779,7 @@ nnoremap <leader>a :Ack!<space>
 "----------------------------------------------
 " Configure signs.
 let g:neomake_error_sign   = {'text': '✖', 'texthl': 'NeomakeErrorSign'}
-let g:neomake_warning_sign = {'text': '∆', 'texthl': 'NeomakeWarningSign'}
+let g:neomake_warning_sign = {'text': '⚠', 'texthl': 'NeomakeWarningSign'}
 let g:neomake_message_sign = {'text': '➤', 'texthl': 'NeomakeMessageSign'}
 let g:neomake_info_sign    = {'text': 'ℹ', 'texthl': 'NeomakeInfoSign'}
 
@@ -541,14 +789,58 @@ let g:neomake_info_sign    = {'text': 'ℹ', 'texthl': 'NeomakeInfoSign'}
 " Configure signs.
 let g:ale_linters = {'html': [], 'javascript': ['eslint'], 'go': ['gometalinter']}
 let g:ale_set_highlights = 0
-let g:ale_set_signs = 1
-let g:ale_sign_column_always = 1
-let g:ale_sign_error = '✖'
-let g:ale_sign_warning = '⚠'
-let g:ale_warn_about_trailing_whitespace = 0
+let g:ale_change_sign_column_color = 0
+"let g:ale_set_signs = 1
+"let g:ale_sign_column_always = 1
+"let g:ale_sign_error = '✖'
+"let g:ale_sign_warning = '⚠'
+"let g:ale_warn_about_trailing_whitespace = 0
+let g:ale_lint_on_save = 1
+
 "----------------------------------------------
 " Plugin: scrooloose/nerdtree
 "----------------------------------------------
+let g:lightline = {
+\ 'colorscheme': 'tenderplus',
+\ 'active': {
+\   'left': [['mode', 'paste'], ['filename', 'modified']],
+\   'right': [['lineinfo'], ['percent'], ['readonly', 'linter_warnings', 'linter_errors', 'linter_ok']]
+\ },
+\ 'component_expand': {
+\   'linter_warnings': 'LightlineLinterWarnings',
+\   'linter_errors': 'LightlineLinterErrors',
+\   'linter_ok': 'LightlineLinterOK'
+\ },
+\ 'component_type': {
+\   'readonly': 'error',
+\   'linter_warnings': 'warning',
+\   'linter_errors': 'error'
+\ },
+\ }
+
+function! LightlineLinterWarnings() abort
+  let l:counts = ale#statusline#Count(bufnr(''))
+  let l:all_errors = l:counts.error + l:counts.style_error
+  let l:all_non_errors = l:counts.total - l:all_errors
+  return l:counts.total == 0 ? '' : printf('%d ◆', all_non_errors)
+endfunction
+
+function! LightlineLinterErrors() abort
+  let l:counts = ale#statusline#Count(bufnr(''))
+  let l:all_errors = l:counts.error + l:counts.style_error
+  let l:all_non_errors = l:counts.total - l:all_errors
+  return l:counts.total == 0 ? '' : printf('%d ✗', all_errors)
+endfunction
+
+function! LightlineLinterOK() abort
+  let l:counts = ale#statusline#Count(bufnr(''))
+  let l:all_errors = l:counts.error + l:counts.style_error
+  let l:all_non_errors = l:counts.total - l:all_errors
+  return l:counts.total == 0 ? '✓ ' : ''
+endfunction
+
+autocmd User ALELint call lightline#update()
+
 nnoremap <leader>d :NERDTreeToggle<cr>
 nnoremap <F2> :NERDTreeToggle<cr>
 
@@ -628,10 +920,9 @@ let g:deoplete#sources#go#pointer = 1
 " Language: Golang
 "----------------------------------------------
 au FileType go set noexpandtab
-au FileType go set shiftwidth=4
-au FileType go set softtabstop=4
-au FileType go set tabstop=4
-
+au FileType go set shiftwidth=2
+au FileType go set softtabstop=2
+au FileType go set tabstop=2
 " Mappings
 au FileType go nmap <F9> :GoCoverageToggle -short<cr>
 au FileType go nmap <F10> :GoTest -short<cr>
@@ -649,6 +940,7 @@ au FileType go nmap <leader>gDv <Plug>(go-doc-vertical)
 
 " Run goimports when running gofmt
 let g:go_fmt_command = "goimports"
+let g:go_fmt_fail_silently = 1 "we have this for ale
 
 " Set neosnippet as snippet engine
 let g:go_snippet_engine = "neosnippet"
@@ -662,6 +954,9 @@ let g:go_highlight_structs = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
 let g:go_highlight_extra_types = 1
+let g:go_highlight_format_strings = 1
+"let g:go_highlight_variable_declarations = 1
+"let g:go_highlight_variable_assignments = 1
 
 " Show the progress when running :GoCoverage
 let g:go_echo_command_info = 1
@@ -673,7 +968,9 @@ let g:go_echo_command_info = 1
 let g:go_auto_sameids = 1
 
 " Fix for location list when vim-go is used together with Syntastic
-let g:go_list_type = "quickfix"
+"let g:go_list_type = "quickfix"
+let g:go_gocode_propose_builtins = 1
+let g:go_gocode_unimported_packages = 1
 
 " gometalinter configuration
 let g:go_auto_type_info = 1
@@ -681,18 +978,18 @@ let g:go_snippet_engine = "neosnippet"
 let g:go_statusline_duration = 10000
 let g:go_metalinter_command = ""
 let g:go_metalinter_deadline = "5s"
-let g:go_metalinter_enabled = [
-    \ 'deadcode',
-    \ 'errcheck',
-    \ 'gas',
-    \ 'goconst',
-    \ 'gocyclo',
-    \ 'golint',
-    \ 'gosimple',
-    \ 'ineffassign',
-    \ 'vet',
-    \ 'vetshadow'
-\]
+"let g:go_metalinter_enabled = [
+"    \ 'deadcode',
+"    \ 'errcheck',
+"    \ 'gas',
+"    \ 'goconst',
+"    \ 'gocyclo',
+"    \ 'golint',
+"    \ 'gosimple',
+"    \ 'ineffassign',
+"    \ 'vet',
+"    \ 'vetshadow'
+"\]
 
 " Set whether the JSON tags should be snakecase or camelcase.
 let g:go_addtags_transform = "snakecase"
@@ -708,30 +1005,47 @@ let g:ale_go_gometalinter_options = '
   \ --disable=goconst
   \ --disable=gocyclo
   \ '
+
+let g:ale_sign_error = '✖'
+let g:ale_sign_warning = '⚠'
+highlight link ALEWarningSign String
+highlight link ALEErrorSign todo
+    "highlight link ALEErrorSign error
+
+    "highlight link ALEStyleErrorSign ALEErrorSign
+
+    "highlight link ALEWarningSign todo
+
+    "highlight link ALEStyleWarningSign ALEWarningSign
+
+    "highlight link ALEInfoSign ALEWarningSign
+
+autocmd User ALELint call lightline#update()
+
 " neomake configuration for Go.
-"let g:neomake_go_enabled_makers = [ 'go', 'gometalinter' ]
-"let g:neomake_go_gometalinter_maker = {
-"  \ 'args': [
-"  \   '--tests',
-"  \   '--enable-gc',
-"  \   '--concurrency=3',
-"  \   '--fast',
-"  \   '-D', 'aligncheck',
-"  \   '-D', 'dupl',
-"  \   '-D', 'gocyclo',
-"  \   '-D', 'gotype',
-"  \   '-E', 'errcheck',
-"  \   '-E', 'misspell',
-"  \   '-E', 'unused',
-"  \   '%:p:h',
-"  \ ],
-"  \ 'append_file': 0,
-"  \ 'errorformat':
-"  \   '%E%f:%l:%c:%trror: %m,' .
-"  \   '%W%f:%l:%c:%tarning: %m,' .
-"  \   '%E%f:%l::%trror: %m,' .
-"  \   '%W%f:%l::%tarning: %m'
-"  \ }
+let g:neomake_go_enabled_makers = [ 'go', 'gometalinter' ]
+let g:neomake_go_gometalinter_maker = {
+  \ 'args': [
+  \   '--tests',
+  \   '--enable-gc',
+  \   '--concurrency=3',
+  \   '--fast',
+  \   '-D', 'aligncheck',
+  \   '-D', 'dupl',
+  \   '-D', 'gocyclo',
+  \   '-D', 'gotype',
+  \   '-E', 'errcheck',
+  \   '-E', 'misspell',
+  \   '-E', 'unused',
+  \   '%:p:h',
+  \ ],
+  \ 'append_file': 0,
+  \ 'errorformat':
+  \   '%E%f:%l:%c:%trror: %m,' .
+  \   '%W%f:%l:%c:%tarning: %m,' .
+  \   '%E%f:%l::%trror: %m,' .
+  \   '%W%f:%l::%tarning: %m'
+  \ }
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helper functions
@@ -965,3 +1279,6 @@ au FileType yaml set expandtab
 au FileType yaml set shiftwidth=2
 au FileType yaml set softtabstop=2
 au FileType yaml set tabstop=2
+
+"autocmd BufWritePost * Neomake
+autocmd User ALELint call lightline#update()

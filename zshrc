@@ -153,15 +153,16 @@ export NODE_PATH=/usr/local/bin
 PATH=$PATH:$HOME/bin
 export GOPATH=$HOME/cf-repos
 #export GOROOT=/usr/local/go
-export PATH=$GOPATH/bin:$PATH
-export GOROOT=$(go env GOROOT)
+export PATH=$PATH:$GOPATH/bin
+#export GOROOT=$(go env GOROOT)
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
 export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 
 # Man now pipes to vim
-export MANPAGER="col -b | vim -MR - "
+#export MANPAGER="col -b | vim -MR - "
+export MANPAGER="/bin/sh -c \"col -b | vim -c 'set ft=man ts=8 nomod nolist nonu noma' -\""
 
 function cover () {
   t="/tmp/go-cover.$$.tmp"
@@ -208,4 +209,4 @@ zle -N zle-keymap-select
 bindkey -M viins 'jj' vi-cmd-mode
 
 
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+#test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
