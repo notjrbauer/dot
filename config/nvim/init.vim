@@ -1,7 +1,24 @@
 set runtimepath+=~/.vim_runtime
 
 call plug#begin('~/.vim/plugged')
+Plug 'saltstack/salt-vim'
+Plug 'octol/vim-cpp-enhanced-highlight'
+Plug 'blueyed/vim-qf_resize'
+Plug 'tpope/vim-repeat'
+"Plug 'svermeulen/vim-easyclip'
+Plug 'roxma/ncm-clang'
+Plug 'roxma/nvim-completion-manager'
+Plug 'roxma/nvim-cm-tern', {'do': 'npm install'}
+Plug 'roxma/LanguageServer-php-neovim',  {'do': 'composer install && composer run-script parse-stubs'}
 
+Plug 'chr4/nginx.vim'
+Plug 'ternjs/tern_for_vim', { 'do': 'npm install -g tern' }
+Plug 'chriskempson/vim-tomorrow-theme'
+Plug 'mhinz/vim-janah'
+Plug 'ludovicchabant/vim-gutentags'
+Plug 'ayu-theme/ayu-vim'
+Plug 'hzchirs/vim-material'
+Plug 'dim13/smyck.vim'
 Plug 'rakr/vim-one'
 Plug 'w0rp/ale'
 Plug 'tpope/vim-surround'
@@ -28,7 +45,6 @@ Plug 'tpope/vim-rhubarb'           " Depenency for tpope/fugitive
 
 "" General plugins
 Plug 'easymotion/vim-easymotion'
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'  " Default snippets for many languages
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}  " Needed to make sebdah/vim-delve work on Vim
@@ -60,14 +76,11 @@ Plug 'aklt/plantuml-syntax'
 Plug 'cespare/vim-toml'
 Plug 'chr4/nginx.vim'
 Plug 'fatih/vim-go'
-Plug 'fishbullet/deoplete-ruby'
 Plug 'kylef/apiblueprint.vim'
 Plug 'lifepillar/pgsql.vim'
 Plug 'nsf/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh' }
 Plug 'plasticboy/vim-markdown'
 Plug 'tclh123/vim-thrift'
-Plug 'zchee/deoplete-go', { 'do': 'make'}
-Plug 'zchee/deoplete-jedi'
 Plug 'edkolev/tmuxline.vim'
 
 "" Colorschemes
@@ -83,7 +96,7 @@ set smartindent                   " enable smart indentation
 set autoread                      " reload file if the file changes on the disk
 set autowrite                     " write when switching buffers
 set autowriteall                  " write on :quit
-set clipboard+=unnamed
+set clipboard+=
 
 "set colorcolumn=81                " highlight the 80th column as an indicator
 "
@@ -310,133 +323,22 @@ imap jj <esc>
 " Path to python interpreter for neovim
 " MIGHT NOT NEED
 let g:tern_show_signature_in_pum = 1  " This enables full signature type on autocomplete
-"let g:deoplete#sources#go#use_cache = 1
-"let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
-let g:deoplete#sources#go#json_directory = $GOPATH.'/src/github.com/notjrbauer/go-static'
-setlocal omnifunc=go#complete#Complete
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#sources#go#gocode_binary = $GOPATH.'/bin/gocode'
-let g:deoplete#sources#go#sort_class = ['package', 'func', 'type', 'var', 'const']
-let g:deoplete#sources = {}
-let g:deoplete#sources.go = ['buffer', 'go']
 
 " ---
 
 " General settings " {{{
 " ---
-" let g:deoplete#auto_complete_delay = 50  " Default is 50
-" let g:deoplete#auto_refresh_delay = 500  " Default is 500
-let g:deoplete#sources = get(g:, 'deoplete#sources', {})
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#enable_refresh_always = 1
-let g:deoplete#enable_camel_case = 1
-let g:deoplete#max_abbr_width = 35
-let g:deoplete#max_menu_width = 30
-let g:deoplete#skip_chars = ['(', ')', '<', '>']
-let g:deoplete#tag#cache_limit_size = 800000
-let g:deoplete#file#enable_buffer_path = 1
-
-let g:deoplete#sources#jedi#statement_length = 30
-let g:deoplete#sources#jedi#show_docstring = 1
-let g:deoplete#sources#jedi#short_types = 1
-
-call deoplete#custom#set('_', 'min_pattern_length', 1)
-
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+imap <expr> <CR>  (pumvisible() ?  "\<c-y>\<Plug>(expand_or_nl)" : "\<CR>")
+imap <expr> <Plug>(expand_or_nl) (cm#completed_is_snippet() ? "\<C-U>":"\<CR>")
 " }}}
 "
 " Limit Sources " {{{
 " ---
 
-let g:deoplete#sources#go = 'vim-go'
-" let g:deoplete#sources.javascript = ['file', 'ternjs']
-" let g:deoplete#sources.jsx = ['file', 'ternjs']
-
-let g:deoplete#ignore_sources = get(g:, 'deoplete#ignore_sources', {})
-" let g:deoplete#ignore_sources.html = ['syntax']
-" let g:deoplete#ignore_sources.python = ['syntax']
-
-" call deoplete#custom#set('_', 'disabled_syntaxes', ['Comment', 'String'])
-
-" }}}
-" Omni functions and patterns " {{{
-" ---
-" let g:deoplete#keyword_patterns = {}
-" let g:deoplete#keyword_patterns._ = '[a-zA-Z_]\k*\(?'
-
-let g:deoplete#omni#functions = get(g:, 'deoplete#omni#functions', {})
-let g:deoplete#omni#functions.css = 'csscomplete#CompleteCSS'
-let g:deoplete#omni#functions.html = 'htmlcomplete#CompleteTags'
-let g:deoplete#omni#functions.markdown = 'htmlcomplete#CompleteTags'
-" let g:deoplete#omni#functions.javascript =
-"	\ [ 'tern#Complete', 'jspc#omni', 'javascriptcomplete#CompleteJS' ]
-
-let g:deoplete#omni_patterns = get(g:, 'deoplete#omni_patterns', {})
-let g:deoplete#omni_patterns.html = '<[^>]*'
-" let g:deoplete#omni_patterns.javascript = '[^. *\t]\.\w*'
-" let g:deoplete#omni_patterns.javascript = '[^. \t]\.\%\(\h\w*\)\?'
-let g:deoplete#omni_patterns.php =
-	\ '\h\w*\|[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
-
-let g:deoplete#omni#input_patterns = get(g:, 'deoplete#omni#input_patterns', {})
-let g:deoplete#omni#input_patterns.xml = '<[^>]*'
-let g:deoplete#omni#input_patterns.md = '<[^>]*'
-let g:deoplete#omni#input_patterns.css  = '^\s\+\w\+\|\w\+[):;]\?\s\+\w*\|[@!]'
-let g:deoplete#omni#input_patterns.scss = '^\s\+\w\+\|\w\+[):;]\?\s\+\w*\|[@!]'
-let g:deoplete#omni#input_patterns.sass = '^\s\+\w\+\|\w\+[):;]\?\s\+\w*\|[@!]'
-let g:deoplete#omni#input_patterns.python = ''
-let g:deoplete#omni#input_patterns.javascript = ''
-
-" }}}
-" Ranking and Marks " {{{
-" Default rank is 100, higher is better.
-call deoplete#custom#set('omni',          'mark', '⌾')
-call deoplete#custom#set('ternjs',        'mark', '⌁')
-call deoplete#custom#set('go',        		'mark', '⌁')
-call deoplete#custom#set('vim-go',        'mark', '⌁')
-call deoplete#custom#set('jedi',          'mark', '⌁')
-call deoplete#custom#set('vim',           'mark', '⌁')
-call deoplete#custom#set('neosnippet',    'mark', '⌘')
-call deoplete#custom#set('tag',           'mark', '⌦')
-call deoplete#custom#set('around',        'mark', '↻')
-call deoplete#custom#set('buffer',        'mark', 'ℬ')
-call deoplete#custom#set('tmux-complete', 'mark', '⊶')
-call deoplete#custom#set('syntax',        'mark', '♯')
-
-call deoplete#custom#set('ternjs',        'rank', 620)
-call deoplete#custom#set('go',        		'rank', 618)
-call deoplete#custom#set('vim-go',        'rank', 618)
-call deoplete#custom#set('jedi',          'rank', 610)
-call deoplete#custom#set('omni',          'rank', 600)
-call deoplete#custom#set('neosnippet',    'rank', 510)
-call deoplete#custom#set('member',        'rank', 500)
-call deoplete#custom#set('file_include',  'rank', 420)
-call deoplete#custom#set('file',          'rank', 410)
-call deoplete#custom#set('tag',           'rank', 400)
-call deoplete#custom#set('around',        'rank', 330)
-call deoplete#custom#set('buffer',        'rank', 320)
-call deoplete#custom#set('dictionary',    'rank', 310)
-call deoplete#custom#set('tmux-complete', 'rank', 300)
-call deoplete#custom#set('syntax',        'rank', 200)
-call deoplete#custom#set('vim',           'rank', 130)
-
-" }}}
-" Matchers and Converters " {{{
-" ---
-
-" Default sorters: ['sorter_rank']
-" Default matchers: ['matcher_length', 'matcher_fuzzy']
-
-call deoplete#custom#set('_', 'converters', [
-	\ 'converter_remove_paren',
-	\ 'converter_remove_overlap',
-	\ 'converter_truncate_abbr',
-	\ 'converter_truncate_menu',
-	\ 'converter_auto_delimiter',
-	\ ])
-
-
-" deoplete tab-complete
-inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+" Close the documentation window when completion is done
+autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 " Tern shortcuts
 au FileType javascript nmap gd :TernDef<CR>
 au FileType javascript nmap <Leader>ds :TernDefSplit<CR>
@@ -470,9 +372,6 @@ nnoremap <silent> <BS> :TmuxNavigateLeft<cr>
 " Neoterm
 let g:neoterm_size = 20
 
-" Show/hide terminal
-nnoremap <silent> <leader>to :call neoterm#open()<cr>
-nnoremap <silent> <leader>th :call neoterm#close()<cr>
 
 syntax enable
 
@@ -487,6 +386,9 @@ scriptencoding utf-8                        " Set utf-8 as default script encodi
 
 set shell=/bin/zsh                          " Setting shell to zsh
 let mapleader = ','
+" Show/hide terminal
+nnoremap <silent> <leader>to :call neoterm#open()<cr>
+nnoremap <silent> <leader>th :call neoterm#close()<cr>
 
 " Autosave buffers before leaving them
 "autocmd BufLeave * silent! :wa
@@ -500,12 +402,22 @@ nnoremap <space> zz
 "----------------------------------------------
 " Colors
 "----------------------------------------------
-"set background=dark
-"colorscheme tender
+set background=dark
+colorscheme tender
+"colorscheme Tomorrow
 "colorscheme tender
 "colorscheme github
-set background=light
-colorscheme one
+"set background=dark
+"colorscheme tender
+"colorscheme smyck
+
+"let ayucolor="mirage"   " for dark version of theme
+"colorscheme ayu
+
+
+"set background=dark
+"colorscheme vim-material
+"set background=dark
 "colorscheme two-firewatch
 "let g:two_firewatch_italics=1
 
@@ -607,20 +519,11 @@ nnoremap <leader>q :close<cr>
 "----------------------------------------------
 if has('nvim')
     " Enable deoplete on startup
-    let g:deoplete#enable_at_startup = 1
 endif
 
 "We enjoy things that don't blink
 "set guicursor=n-v-i:blinkwait000-blinkon000-blinkoff000
 
-" Disable deoplete when in multi cursor mode
-function! Multiple_cursors_before()
-    let b:deoplete_disable_auto_complete = 1
-endfunction
-
-function! Multiple_cursors_after()
-    let b:deoplete_disable_auto_complete = 0
-endfunction
 
 "----------------------------------------------
 " Plugin: bling/vim-airline
@@ -713,9 +616,64 @@ let g:calendar_google_task = 1
 "----------------------------------------------
 " Plugin: 'junegunn/fzf.vim'
 "----------------------------------------------
-nnoremap <c-f> :Ag<cr>
+" {{{
+  let g:fzf_nvim_statusline = 0 " disable statusline overwriting
+
+  nnoremap <silent> <leader><space> :Files<CR>
+  nnoremap <silent> <leader>a :Buffers<CR>
+  nnoremap <silent> <leader>A :Windows<CR>
+  nnoremap <silent> <leader>; :BLines<CR>
+  nnoremap <silent> <leader>o :BTags<CR>
+  nnoremap <silent> <leader>O :Tags<CR>
+  nnoremap <silent> <leader>? :History<CR>
+  nnoremap <c-f> :Ag<cr>
+  nnoremap <silent> <leader>. :AgIn
+
+  nnoremap <silent> K :call SearchWordWithAg()<CR>
+  vnoremap <silent> K :call SearchVisualSelectionWithAg()<CR>
+  nnoremap <silent> <leader>gl :Commits<CR>
+  nnoremap <silent> <leader>ga :BCommits<CR>
+  nnoremap <silent> <leader>ft :Filetypes<CR>
+
+  "imap <C-x><C-f> <plug>(fzf-complete-file-ag)
+  "imap <C-x><C-l> <plug>(fzf-complete-line)
+
+  function! SearchWordWithAg()
+    execute 'Ag' expand('<cword>')
+  endfunction
+
+  function! SearchVisualSelectionWithAg() range
+    let old_reg = getreg('"')
+    let old_regtype = getregtype('"')
+    let old_clipboard = &clipboard
+    set clipboard&
+    normal! ""gvy
+    let selection = getreg('"')
+    call setreg('"', old_reg, old_regtype)
+    let &clipboard = old_clipboard
+    execute 'Ag' selection
+  endfunction
+
+  function! SearchWithAgInDirectory(...)
+    call fzf#vim#ag(join(a:000[1:], ' '), extend({'dir': a:1}, g:fzf#vim#default_layout))
+  endfunction
+  command! -nargs=+ -complete=dir AgIn call SearchWithAgInDirectory(<f-args>)
+" }}}
 let g:fzf_buffers_jump = 1
 let g:fzf_tags_command = 'ctags -R'
+let g:fzf_colors =
+ \ { 'fg':      ['fg', 'Normal'],
+   \ 'bg':      ['bg', 'Normal'],
+   \ 'hl':      ['fg', 'Comment'],
+   \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+   \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+   \ 'hl+':     ['fg', 'Statement'],
+   \ 'info':    ['fg', 'PreProc'],
+   \ 'prompt':  ['fg', 'Conditional'],
+   \ 'pointer': ['fg', 'Exception'],
+   \ 'marker':  ['fg', 'Keyword'],
+   \ 'spinner': ['fg', 'Label'],
+   \ 'header':  ['fg', 'Comment'] }
 
 "----------------------------------------------
 " Plugin: 'majutsushi/tagbar'
@@ -725,6 +683,7 @@ nnoremap <F3> :NERDTreeToggle<cr>
 
 " Language: Go
 " Tagbar configuration for Golang
+set tags=./.tags;,~/.vimtags
 let g:tagbar_type_go = {
     \ 'ctagstype' : 'go',
     \ 'kinds'     : [
@@ -754,6 +713,28 @@ let g:tagbar_type_go = {
 \ }
 
 "----------------------------------------------
+" Plugin: ncm-clang
+"----------------------------------------------
+" default key mapping is annoying
+let g:clang_make_default_keymappings = 0
+" ncm-clang is auto detecting compile_commands.json and .clang_complete
+" file
+let g:clang_auto_user_options = ''
+
+func WrapClangGoTo()
+    let cwd = getcwd()
+    let info = ncm_clang#compilation_info()
+    exec 'cd ' . info['directory']
+    try
+        let b:clang_user_options = join(info['args'], ' ')
+        call g:ClangGotoDeclaration()
+    catch
+    endtry
+    " restore
+    exec 'cd ' . cwd
+endfunc
+autocmd FileType c,cpp nnoremap <buffer> gd :call WrapClangGoTo()<CR>
+"----------------------------------------------
 " Plugin: plasticboy/vim-markdown
 "----------------------------------------------
 " Disable folding
@@ -772,7 +753,7 @@ nnoremap <leader>w :Bclose<cr>
 " Plugin: mileszs/ack.vim
 "----------------------------------------------
 " Open ack
-nnoremap <leader>a :Ack!<space>
+"nnoremap <leader>a :Ack!<space>
 
 "----------------------------------------------
 " Plugin: neomake/neomake
@@ -787,7 +768,7 @@ let g:neomake_info_sign    = {'text': 'ℹ', 'texthl': 'NeomakeInfoSign'}
 " Plugin: ale/aliue
 "----------------------------------------------
 " Configure signs.
-let g:ale_linters = {'html': [], 'javascript': ['eslint'], 'go': ['gometalinter']}
+let g:ale_linters = {'html': [], 'javascript': ['eslint'], 'go': ['gometalinter'], 'cpp': ['clang'], }
 let g:ale_set_highlights = 0
 let g:ale_change_sign_column_color = 0
 "let g:ale_set_signs = 1
@@ -795,7 +776,20 @@ let g:ale_change_sign_column_color = 0
 "let g:ale_sign_error = '✖'
 "let g:ale_sign_warning = '⚠'
 "let g:ale_warn_about_trailing_whitespace = 0
+let g:ale_set_loclist = 0
+let g:ale_open_list = 1
 let g:ale_lint_on_save = 1
+let g:ale_set_quickfix = 1
+let g:ale_lint_on_text_changed = 'never'
+" You can disable this option too
+" if you don't want linters to run on opening a file
+let g:ale_lint_on_enter = 0
+"augroup quickfix
+"    autocmd!
+"    autocmd QuickFixCmdPost [^l]* cwindow
+"    autocmd VimEnter        *     cwindow
+"augroup END
+"let g:ale_open_list = 1
 
 "----------------------------------------------
 " Plugin: scrooloose/nerdtree
@@ -839,6 +833,10 @@ function! LightlineLinterOK() abort
   return l:counts.total == 0 ? '✓ ' : ''
 endfunction
 
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+
 autocmd User ALELint call lightline#update()
 
 nnoremap <leader>d :NERDTreeToggle<cr>
@@ -877,9 +875,9 @@ let g:delve_backend = "native"
 "
 " Below you can disable default snippets for specific languages. If you set the
 " language to _ it sets the default for all languages.
-let g:neosnippet#disable_runtime_snippets = {
-    \ 'go': 1
-\}
+"let g:neosnippet#disable_runtime_snippets = {
+"    \ 'go': 1
+"\}
 
 " Keybindings
 imap <C-k> <Plug>(neosnippet_expand_or_jump)
@@ -909,12 +907,6 @@ au FileType vimwiki set tabstop=2
 "----------------------------------------------
 let g:multi_cursor_next_key='<C-x>'
 let g:multi_cursor_skip_key='<C-X>'
-
-"----------------------------------------------
-" Plugin: zchee/deoplete-go
-"----------------------------------------------
-" Enable completing of go pointers
-let g:deoplete#sources#go#pointer = 1
 
 "----------------------------------------------
 " Language: Golang
@@ -950,6 +942,8 @@ let g:go_highlight_types = 1
 let g:go_highlight_fields = 1
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_trailing_whitespace_error = 1
 let g:go_highlight_structs = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
@@ -968,7 +962,6 @@ let g:go_echo_command_info = 1
 let g:go_auto_sameids = 1
 
 " Fix for location list when vim-go is used together with Syntastic
-"let g:go_list_type = "quickfix"
 let g:go_gocode_propose_builtins = 1
 let g:go_gocode_unimported_packages = 1
 
@@ -997,14 +990,23 @@ let g:go_addtags_transform = "snakecase"
 " ======================== ale ========================
 let g:ale_go_gometalinter_options = '
   \ --aggregate
+  \ --enable-gc
+  \ --concurrency=3
+  \ --vendor
   \ --fast
   \ --sort=line
-  \ --vendor
-  \ --vendored-linters
+  \ --errors
   \ --disable=gas
   \ --disable=goconst
   \ --disable=gocyclo
+  \ --disable=dupl
+  \ --disable=aligncheck
+  \ --disable=misspell
+  \ --enable=unused
+  \ --enable=errcheck
   \ '
+  "\ --vendor
+  "\ --vendored-linters
 
 let g:ale_sign_error = '✖'
 let g:ale_sign_warning = '⚠'
@@ -1020,7 +1022,6 @@ highlight link ALEErrorSign todo
 
     "highlight link ALEInfoSign ALEWarningSign
 
-autocmd User ALELint call lightline#update()
 
 " neomake configuration for Go.
 let g:neomake_go_enabled_makers = [ 'go', 'gometalinter' ]
@@ -1279,6 +1280,19 @@ au FileType yaml set expandtab
 au FileType yaml set shiftwidth=2
 au FileType yaml set softtabstop=2
 au FileType yaml set tabstop=2
+
+"----------------------------------------------
+" Language: ino/cpp
+"----------------------------------------------
+au FileType ino set expandtab
+au FileType ino set shiftwidth=2
+au FileType ino set softtabstop=2
+au FileType ino set tabstop=2
+autocmd BufNewFile,BufReadPost *.ino,*.pde set filetype=cpp
+autocmd BufEnter *.cpp,*.h,*.hpp,*.hxx,*.ino let g:ale_cpp_clang_options = join(ncm_clang#compilation_info()['args'], ' ')
+    " (optional, for completion performance) run linters only when I save files
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_enter = 0
 
 "autocmd BufWritePost * Neomake
 autocmd User ALELint call lightline#update()
