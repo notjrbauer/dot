@@ -1,18 +1,33 @@
 set runtimepath+=~/.vim_runtime
 
 call plug#begin('~/.vim/plugged')
+"Plug 'autozimu/LanguageClient-neovim', {
+"    \ 'branch': 'next',
+"    \ 'do': './install.sh'
+"    \ }
+Plug 'Raimondi/delimitMate'
+Plug 'Shougo/denite.nvim'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'zchee/deoplete-go', { 'do': 'make'}
+Plug 'zchee/deoplete-jedi'
+Plug 'padawan-php/deoplete-padawan', { 'do': 'composer install' }
+Plug 'Shougo/echodoc.vim'
+Plug 'joonty/vdebug'
+"Plug 'jsfaint/gen_tags.vim'
 Plug 'saltstack/salt-vim'
 Plug 'octol/vim-cpp-enhanced-highlight'
 Plug 'blueyed/vim-qf_resize'
 Plug 'tpope/vim-repeat'
 "Plug 'svermeulen/vim-easyclip'
-Plug 'roxma/ncm-clang'
-Plug 'roxma/nvim-completion-manager'
-Plug 'roxma/nvim-cm-tern', {'do': 'npm install'}
-Plug 'roxma/LanguageServer-php-neovim',  {'do': 'composer install && composer run-script parse-stubs'}
+"Plug 'roxma/ncm-clang'
+"Plug 'roxma/nvim-completion-manager'
+"Plug 'roxma/nvim-cm-tern', {'do': 'npm install'}
+"Plug 'roxma/LanguageServer-php-neovim',  {'do': 'composer install && composer run-script parse-stubs'}
 
+Plug 'jacoborus/tender.vim'
 Plug 'chr4/nginx.vim'
 Plug 'ternjs/tern_for_vim', { 'do': 'npm install -g tern' }
+Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
 Plug 'chriskempson/vim-tomorrow-theme'
 Plug 'mhinz/vim-janah'
 Plug 'ludovicchabant/vim-gutentags'
@@ -45,7 +60,7 @@ Plug 'tpope/vim-rhubarb'           " Depenency for tpope/fugitive
 
 "" General plugins
 Plug 'easymotion/vim-easymotion'
-Plug 'Shougo/neosnippet'
+Plug 'Shougo/neosnippet.vim'
 Plug 'Shougo/neosnippet-snippets'  " Default snippets for many languages
 Plug 'Shougo/vimproc.vim', {'do' : 'make'}  " Needed to make sebdah/vim-delve work on Vim
 Plug 'Shougo/vimshell.vim'                  " Needed to make sebdah/vim-delve work on Vim
@@ -101,8 +116,11 @@ set clipboard+=
 "set colorcolumn=81                " highlight the 80th column as an indicator
 "
 set noswapfile
+set splitbelow
 set completeopt-=preview          " remove the horrendous preview window
-set cursorline                    " highlight the current line for the cursor
+"set completeopt-=preview
+"set cursorline                    " highlight the current line for the cursor
+set cmdheight=2
 set encoding=utf-8
 set expandtab                     " expands tabs to spaces
 set smarttab                      " Be smart when using tabs ;)
@@ -263,17 +281,17 @@ vnoremap <silent> * :<c-u>call visualselection('', '')<cr>/<c-r>=@/<cr><cr>
 vnoremap <silent> # :<c-u>call visualselection('', '')<cr>?<c-r>=@/<cr><cr>
 
 " Delete trailing white space on save, useful for some filetypes ;)
-fun! CleanExtraSpaces()
-    let save_cursor = getpos(".")
-    let old_query = getreg('/')
-    silent! %s/\s\+$//e
-    call setpos('.', save_cursor)
-    call setreg('/', old_query)
-endfun
+"fun! CleanExtraSpaces()
+"    let save_cursor = getpos(".")
+"    let old_query = getreg('/')
+"    silent! %s/\s\+$//e
+"    call setpos('.', save_cursor)
+"    call setreg('/', old_query)
+"endfun
 
-if has("autocmd")
-    autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
-endif
+"if has("autocmd")
+"    autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
+"endif
 
 
 " Specify the behavior when switching between buffers
@@ -308,14 +326,14 @@ endif
 "if (empty($TMUX))
   if (has("nvim"))
   "For Neovim 0.1.3 and 0.1.4 < https://github.com/neovim/neovim/pull/2198 >
-  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+      let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+      set termguicolors
   endif
   "For Neovim > 0.1.5 and Vim > patch 7.4.1799 < https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162 >
   "Based on Vim patch 7.4.1770 (`guicolors` option) < https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd >
   " < https://github.com/neovim/neovim/wiki/Following-HEAD#20160511 >
-  if (has("termguicolors"))
-    set termguicolors
-  endif
+  "if (has("termguicolors"))
+  "endif
 "endif
 
 imap jj <esc>
@@ -328,17 +346,50 @@ let g:tern_show_signature_in_pum = 1  " This enables full signature type on auto
 
 " General settings " {{{
 " ---
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-imap <expr> <CR>  (pumvisible() ?  "\<c-y>\<Plug>(expand_or_nl)" : "\<CR>")
-imap <expr> <Plug>(expand_or_nl) (cm#completed_is_snippet() ? "\<C-U>":"\<CR>")
+"inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+" <CR>: If popup menu visible, expand snippet or close popup with selection,
+"       Otherwise, check if within empty pair and use delimitMate.
+inoremap <silent><expr><CR> pumvisible() ?
+	\ (neosnippet#expandable() ? neosnippet#mappings#expand_impl() : deoplete#close_popup())
+		\ : (delimitMate#WithinEmptyPair() ? "\<C-R>=delimitMate#ExpandReturn()\<CR>" : "\<CR>")
+
+imap <expr><TAB> pumvisible() ? "\<C-n>" : (neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>")
+" <Tab> completion:
+" 1. If popup menu is visible, select and insert next item
+" 2. Otherwise, if within a snippet, jump to next input
+" 3. Otherwise, if preceding chars are whitespace, insert tab char
+" 4. Otherwise, start manual autocomplete
+imap <silent><expr><Tab> pumvisible() ? "\<Down>"
+	\ : (neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)"
+	\ : (<SID>is_whitespace() ? "\<Tab>"
+	\ : deoplete#manual_complete()))
+
+smap <silent><expr><Tab> pumvisible() ? "\<Down>"
+	\ : (neosnippet#jumpable() ? "\<Plug>(neosnippet_jump)"
+	\ : (<SID>is_whitespace() ? "\<Tab>"
+	\ : deoplete#manual_complete()))
+
+inoremap <expr><S-Tab>  pumvisible() ? "\<Up>" : "\<C-h>"
+inoremap <silent><expr> <TAB>
+    \ pumvisible() ? "\<C-n>" :
+    \ <SID>check_back_space() ? "\<TAB>" :
+    \ deoplete#mappings#manual_complete()
+
+function! s:check_back_space() abort "{{{
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~ '\s'
+endfunction"}}}
 " }}}
 "
 " Limit Sources " {{{
 " ---
+let g:tern#command = ["tern"]
+let g:tern#arguments = ["--persistent"]
+let g:deoplete#sources#ternjs#types = 1
+
 
 " Close the documentation window when completion is done
-autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+"autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 " Tern shortcuts
 au FileType javascript nmap gd :TernDef<CR>
 au FileType javascript nmap <Leader>ds :TernDefSplit<CR>
@@ -517,9 +568,74 @@ nnoremap <leader>q :close<cr>
 "----------------------------------------------
 " Plugin: Shougo/deoplete.nvim
 "----------------------------------------------
-if has('nvim')
-    " Enable deoplete on startup
-endif
+let g:echodoc_enable_at_startup = 1
+let g:deoplete#sources#padawan#add_parentheses = 0
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#auto_complete_delay = 0
+let g:deoplete#ignore_sources = {}
+let g:deoplete#ignore_sources._ = ['buffer', 'around']
+let g:deoplete#file#enable_buffer_path=1
+let g:deoplete#enable_refresh_always = 0
+let g:deoplete#enable_camel_case = 1
+let g:deoplete#sources = get(g:, 'deoplete#sources', {})
+let g:deoplete#sources#ternjs#filetypes = [
+	\ 'jsx',
+	\ 'javascript.jsx',
+	\ 'vue',
+	\ 'javascript'
+	\ ]
+
+call deoplete#custom#set('omni',          'mark', '⌾')
+call deoplete#custom#set('ternjs',        'mark', '⌁')
+call deoplete#custom#set('go',        	  'mark', '⌁')
+call deoplete#custom#set('vim-go',        'mark', '⌁')
+call deoplete#custom#set('jedi',          'mark', '⌁')
+call deoplete#custom#set('vim',           'mark', '⌁')
+call deoplete#custom#set('padawan',       'mark', '⌁')
+call deoplete#custom#set('neosnippet',    'mark', '⌘')
+call deoplete#custom#set('tag',           'mark', '⌦')
+call deoplete#custom#set('around',        'mark', '↻')
+call deoplete#custom#set('buffer',        'mark', 'ℬ')
+call deoplete#custom#set('tmux-complete', 'mark', '⊶')
+call deoplete#custom#set('syntax',        'mark', '♯')
+call deoplete#custom#set('member',        'mark', '.')
+
+call deoplete#custom#set('ternjs',        'rank', 620)
+call deoplete#custom#set('go',        	  'rank', 618)
+call deoplete#custom#set('vim-go',        'rank', 618)
+call deoplete#custom#set('jedi',          'rank', 610)
+call deoplete#custom#set('padawan',       'rank', 610)
+call deoplete#custom#set('omni',          'rank', 600)
+call deoplete#custom#set('neosnippet',    'rank', 510)
+call deoplete#custom#set('member',        'rank', 500)
+call deoplete#custom#set('file_include',  'rank', 420)
+call deoplete#custom#set('file',          'rank', 410)
+call deoplete#custom#set('tag',           'rank', 400)
+call deoplete#custom#set('around',        'rank', 330)
+call deoplete#custom#set('buffer',        'rank', 320)
+call deoplete#custom#set('dictionary',    'rank', 310)
+call deoplete#custom#set('tmux-complete', 'rank', 300)
+call deoplete#custom#set('syntax',        'rank', 200)
+call deoplete#custom#set('vim',           'rank', 130)
+let g:deoplete#omni#input_patterns = {}
+let g:deoplete#keyword_patterns = {}
+"let g:deoplete#keyword_patterns['default'] = '\h\w*'
+
+" Default sorters: ['sorter_rank']
+" Default matchers: ['matcher_length', 'matcher_fuzzy']
+
+"let g:deoplete#sources.go = ['vim-go']
+let g:deoplete#sources#ternjs#timeout = 3
+let g:deoplete#sources#ternjs#types = 1
+let g:deoplete#sources#ternjs#docs = 1
+
+call deoplete#custom#set('_', 'converters', [
+\ 'converter_remove_paren',
+\ 'converter_remove_overlap',
+\ 'converter_truncate_abbr',
+\ 'converter_truncate_menu',
+\ 'converter_auto_delimiter',
+\ ])
 
 "We enjoy things that don't blink
 "set guicursor=n-v-i:blinkwait000-blinkon000-blinkoff000
@@ -683,7 +799,13 @@ nnoremap <F3> :NERDTreeToggle<cr>
 
 " Language: Go
 " Tagbar configuration for Golang
-set tags=./.tags;,~/.vimtags
+let g:gutentags_cache_dir = '~/.tags_cache'
+"let g:loaded_gentags#gtags = 1
+"let g:gen_tags#ctags_auto_gen = 1
+"let g:gen_tags#use_cache_dir = 0
+"let g:gen_tags#verbose = 0
+"let g:gen_tags#blacklist = ['$HOME']
+set tags=./.tags;,~/.vimtags;,./.git;
 let g:tagbar_type_go = {
     \ 'ctagstype' : 'go',
     \ 'kinds'     : [
@@ -716,24 +838,24 @@ let g:tagbar_type_go = {
 " Plugin: ncm-clang
 "----------------------------------------------
 " default key mapping is annoying
-let g:clang_make_default_keymappings = 0
+"let g:clang_make_default_keymappings = 0
 " ncm-clang is auto detecting compile_commands.json and .clang_complete
 " file
-let g:clang_auto_user_options = ''
+"let g:clang_auto_user_options = ''
 
-func WrapClangGoTo()
-    let cwd = getcwd()
-    let info = ncm_clang#compilation_info()
-    exec 'cd ' . info['directory']
-    try
-        let b:clang_user_options = join(info['args'], ' ')
-        call g:ClangGotoDeclaration()
-    catch
-    endtry
-    " restore
-    exec 'cd ' . cwd
-endfunc
-autocmd FileType c,cpp nnoremap <buffer> gd :call WrapClangGoTo()<CR>
+"func WrapClangGoTo()
+"    let cwd = getcwd()
+"    let info = ncm_clang#compilation_info()
+"    exec 'cd ' . info['directory']
+"    try
+"        let b:clang_user_options = join(info['args'], ' ')
+"        call g:ClangGotoDeclaration()
+"    catch
+"    endtry
+"    " restore
+"    exec 'cd ' . cwd
+"endfunc
+"autocmd FileType c,cpp nnoremap <buffer> gd :call WrapClangGoTo()<CR>
 "----------------------------------------------
 " Plugin: plasticboy/vim-markdown
 "----------------------------------------------
@@ -849,11 +971,12 @@ let NERDTreeIgnore = [
     \ '^\.DS_Store$',
     \ '^node_modules$',
     \ '^.ropeproject$',
+    \ '^vendor$',
     \ '^__pycache__$'
 \]
 
 " Close vim if NERDTree is the only opened window.
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
 " Show hidden files by default.
 let NERDTreeShowHidden = 1
@@ -966,9 +1089,9 @@ let g:go_gocode_propose_builtins = 1
 let g:go_gocode_unimported_packages = 1
 
 " gometalinter configuration
-let g:go_auto_type_info = 1
+let g:go_auto_type_info = 0
 let g:go_snippet_engine = "neosnippet"
-let g:go_statusline_duration = 10000
+"let g:go_statusline_duration = 10000
 let g:go_metalinter_command = ""
 let g:go_metalinter_deadline = "5s"
 "let g:go_metalinter_enabled = [
@@ -1288,6 +1411,8 @@ au FileType ino set expandtab
 au FileType ino set shiftwidth=2
 au FileType ino set softtabstop=2
 au FileType ino set tabstop=2
+
+
 autocmd BufNewFile,BufReadPost *.ino,*.pde set filetype=cpp
 autocmd BufEnter *.cpp,*.h,*.hpp,*.hxx,*.ino let g:ale_cpp_clang_options = join(ncm_clang#compilation_info()['args'], ' ')
     " (optional, for completion performance) run linters only when I save files
