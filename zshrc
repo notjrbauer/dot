@@ -188,6 +188,7 @@ BULLETTRAIN_NVM_SHOW=true
 
 #source ~/.nvm/nvm.sh
 
+source $HOME/.cargo/env
 
 source "$HOME/.zprezto/init.zsh"
 
@@ -210,3 +211,9 @@ bindkey -M viins 'jj' vi-cmd-mode
 
 
 #test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+
+export LC_CTYPE=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+
