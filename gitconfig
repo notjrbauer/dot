@@ -4,7 +4,7 @@
 [mergetool]
   keepBackup = false
 [core]
-  editor = /usr/local/bin/nvim
+	editor = nvr --remote-wait-silent
   autocrlf = false
   pager = "diff-highlight | diff-so-fancy | less --tabs=1,5 -R"
 	excludesfile = /Users/johnbauer/.gitignore
