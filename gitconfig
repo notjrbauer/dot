@@ -1,6 +1,6 @@
 [user]
-	email = jbauer@cloudflare.com
-	name = notjrbauer
+  email = notjrbauer@gmail.com
+  name = notjrbauer
 [mergetool]
   keepBackup = false
 [core]
@@ -40,7 +40,7 @@
 [color]
 	ui = true
   [color "diff"]
-	meta = yellow
+	meta = 11
 	commit = yellow bold
 	frag = magenta bold
 	old = red bold
