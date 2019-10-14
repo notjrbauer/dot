@@ -1,9 +1,9 @@
 env:
-  TERM: screen-256color
+  TERM: xterm-256color
+  # TERM: screen-256color
 
 window:
   padding: {x: 0, y: 0}
-  startup_mode: 'Maximized'
   dynamic_padding: false
   decorations: none
 
@@ -14,10 +14,10 @@ tabspaces: 2
 draw_bold_text_with_bright_colors: true
 
 font:
-  normal: {family: Fira Code, style: Regular}
-  bold: {family: Fira Code, style: Medium}
+  normal: {family: Fira Code, style: Retina}
+  bold: {family: Fira Code, style: Bold}
   italic: {family: Fira Code, style: Light}
-  size: 11.0
+  size: 13.0
   use_thin_strokes: false
 
 visual_bell:
@@ -27,41 +27,63 @@ visual_bell:
 schemes:
   tender: &tender
     primary:
-      background: '0x1e2127'
-      foreground: '0xabb2bf'
+      background: '0x282828'
+      foreground: '0xeeeeee'
 
-    cursor:
-      text: '0xabb2bf'
-      cursor: '0x5c6370'
-
+    # Normal colors
     normal:
-      black: '0x1e2127'
-      red: '0xe06c75'
-      green: '0x98c379'
-      yellow: '0xd19a66'
-      blue: '0x61afef'
-      magenta: '0xc678dd'
-      cyan: '0x56b6c2'
-      white: '0xabb2bf'
+      black: '0x282828'
+      red: '0xf43753'
+      green: '0xc9d05c'
+      yellow: '0xffc24b'
+      blue: '0xb3deef'
+      magenta: '0xd3b987'
+      cyan: '0x73cef4'
+      white: '0xeeeeee'
 
+    # Bright colors
     bright:
-      black: '0x5c6370'
-      red: '0xe06c75'
-      green: '0x98c379'
-      yellow: '0xd19a66'
-      blue: '0x61afef'
-      magenta: '0xc678dd'
-      cyan: '0x56b6c2'
+      black: '0x1d1d1d'
+      red: '0xf43753'
+      green: '0xc9d05c'
+      yellow: '0xffc24b'
+      blue: '0xb3deef'
+      magenta: '0xd3b987'
+      cyan: '0x73cef4'
       white: '0xffffff'
-    dim:
-      black: '0x333333'
-      red: '0xf2777a'
-      green: '0x99cc99'
-      yellow: '0xffcc66'
-      blue: '0x6699cc'
-      magenta: '0xcc99cc'
-      cyan: '0x66cccc'
-      white: '0xdddddd'
+    # primary:
+    #   background: '0x1e2127'
+    #   foreground: '0xabb2bf'
+    # cursor:
+    #   text: '0xabb2bf'
+    #   cursor: '0x5c6370'
+    # normal:
+    #   black: '0x1e2127'
+    #   red: '0xe06c75'
+    #   green: '0x98c379'
+    #   yellow: '0xd19a66'
+    #   blue: '0x61afef'
+    #   magenta: '0xc678dd'
+    #   cyan: '0x56b6c2'
+    #   white: '0xabb2bf'
+    # bright:
+    #   black: '0x5c6370'
+    #   red: '0xe06c75'
+    #   green: '0x98c379'
+    #   yellow: '0xd19a66'
+    #   blue: '0x61afef'
+    #   magenta: '0xc678dd'
+    #   cyan: '0x56b6c2'
+    #   white: '0xffffff'
+    # dim:
+    #   black: '0x333333'
+    #   red: '0xf2777a'
+    #   green: '0x99cc99'
+    #   yellow: '0xffcc66'
+    #   blue: '0x6699cc'
+    #   magenta: '0xcc99cc'
+    #   cyan: '0x66cccc'
+    #   white: '0xdddddd'
 
   solarized_dark: &solarized_dark
     primary:
@@ -118,6 +140,34 @@ schemes:
       magenta: '0xFFEE99'
       cyan: '0x95E6CB'
       white: '0xFFFFFF'
+
+  ayu-light: &ayu-light
+    primary:
+      background: '0xfafafa'
+      foreground: '0x5b6672'
+
+    # Normal colors
+    normal:
+      black: '0x000000' #0
+      red: '0xf2590b' #1
+      green: '0x76cc00' #2
+      yellow: '0xf29717' #3
+      blue: '0x41a5d9' #4
+      magenta: '0x9965cc' #5
+      cyan: '0x4dbf98' #6
+      white: '0xc7c7c7' #7
+
+    # Bright colors
+    bright:
+      black: '0x676767'
+      red: '0xd6646a' #9
+      green: '0xa3d900' #10
+      yellow: '0xe7c446' #11
+      blue: '0x6871ff' #12
+      magenta: '0xa37acc' #13
+      cyan: '0x56d9ad' #14
+      white: '0xfeffff' #15
+
 # yamllint enable rule:colons
 
 colors: *tender
@@ -132,7 +182,7 @@ mouse:
     modifiers: Command
 
 selection:
-  semantic_escape_chars: ',│`|:"'' ()[]{}<>'
+  semantic_escape_chars: ",│`|:\"' ()[]{}<>\t"
 
 live_config_reload: true
 
@@ -266,4 +316,5 @@ key_bindings:
 
 dynamic_title: true
 
-cursor_style: Block
+cursor:
+  style: Block
