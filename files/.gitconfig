@@ -6,10 +6,12 @@
 [include]
   path = ~/.gitconfig.local
 
+[gpg]
+	program = gpg
 
 [commit]
   verbose = true
-  gpgsign = true
+  ;gpgsign = true
 
 [core]
   editor = $EDITOR
@@ -184,13 +186,13 @@
   fsckObjects = true
 
 # URL shorthands
-[url "git@github.com:"]
-	insteadOf = https://github.com/
-  pushInsteadOf = "github:"
-  pushInsteadOf = "git://github.com/"
+; [url "git@github.com:"]
+; 	insteadOf = https://github.com/
+;   pushInsteadOf = "github:"
+;   pushInsteadOf = "git://github.com/"
 
-[url "git://github.com/"]
-  insteadOf = "github:"
+; [url "git://github.com/"]
+;   insteadOf = "github:"
 
 [url "git@gist.github.com:"]
   insteadOf = "gst:"
@@ -226,3 +228,5 @@
 
 [protocol "keybase"]
   allow = always
+[url "git@github.com:"]
+	insteadOf = https://github.com/

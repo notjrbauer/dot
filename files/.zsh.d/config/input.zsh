@@ -89,7 +89,7 @@ zle-line-finish() {
 zle -N zle-line-init
 zle -N zle-line-finish
 
-export KEYTIMEOUT=1
+export KEYTIMEOUT=20
 
 autoload -Uz edit-command-line
 zle -N edit-command-line

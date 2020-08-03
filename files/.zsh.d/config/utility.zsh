@@ -22,6 +22,7 @@ if (( terminfo[colors] >= 8 )); then
     # BSD
 
     (( ! ${+LSCOLORS} )) && export LSCOLORS='ExfxcxdxbxGxDxabagacad'
+echo "util"
 
     # stock OpenBSD ls does not support colors at all, but colorls does.
     if [[ "$(uname)" == openbsd* ]]; then

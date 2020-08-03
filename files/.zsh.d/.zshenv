@@ -133,6 +133,6 @@ export GITHUB_USER="notjrbauer"
 # Ensure that a non-login, non-interactive shell has a defined environment.
 # (Only once) if it was not sourced before, becuase .zshenv is always sourced
 if [[ ( "$SHLVL" -eq 1 && ! -o LOGIN ) ]]; then
-  echo "HELLO"
+  echo 'hello'
   source "${ZDOTDIR:-$HOME}/.zprofile"
 fi

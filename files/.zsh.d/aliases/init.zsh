@@ -13,13 +13,15 @@ alias history='fc -il 1'
 (( $+commands[htop] )) && alias top=htop
 
 
-if (( $+commands[exa] )); then
-  alias ll="exa --tree --all --group-directories-first"
+if (( $+commands[lsd] )); then
+  alias ls="lsd "
+  alias ll="lsd --tree --almost-all --group-dirs first "
 elif (( $+commands[tree] )); then
   alias ll="type tree >/dev/null && tree --dirsfirst -a -L 1 || l -d .*/ */ "
 else
-  alias ll="echo 'You have to install exa or tree'"
+  alias ll="echo 'You have to install lsd or tree'"
 fi
+
 
 # TERMINAL
 alias "?"="pwd"
@@ -32,13 +34,8 @@ alias localip="ipconfig getifaddr en1"
 alias ips="ifconfig -a | perl -nle'/(\d+\.\d+\.\d+\.\d+)/ && print $1'"
 alias fs="stat -f '%z bytes'"
 alias flushdns="sudo killall -HUP mDNSResponder"
-if (( $+commands[jq] )) then;
-  alias formatJSON='jq .'
-else
-  alias formatJSON='python -m json.tool'
-fi
 
-alias ls='exa'
+#alias ls='exa'
 alias l='ls -lFh'     #size,show type,human readable
 alias la='ls -lAFh'   #long list,show almost all,show type,human readable
 alias lr='ls -tRFh'   #sorted by date,recursive,show type,human readable
@@ -49,12 +46,7 @@ alias dk='docker'
 alias dc='docker-compose'
 alias vim="nvim"
 alias dots="cd $DOTFILES"
-alias work='mx lightspeed'
-alias play='mx ϟ'
-alias cask="brew cask"
-alias apache="sudo apachectl "
 alias r="ranger" # overrides built-in r command
-
 alias j='z'
 alias vi='nvim'
 alias vim='nvim'
@@ -68,31 +60,15 @@ bindkey "\e\e[C" forward-word # alt + ->
 bindkey '^[[H' beginning-of-line
 bindkey '^[[F' end-of-line
 
-export CLICOLOR=1
-export KEYTIMEOUT=30 # Remove annoying lag from ESC
-export HIST_STAMPS="yyyy-mm-dd" # Set schema for parsing time stamps
-
-[[ $TERM == *"tmux"* ]] && alias :sp='tmux split-window'
-[[ $TERM == *"tmux"* ]] && alias :vs='tmux split-window -h'
-
-# Conditional aliases
-# https://gist.github.com/sos4nt/3187620#gistcomment-1452131
-[[ $TERM == *"tmux"* ]] && alias ssh="TERM=xterm-256color ssh"
-[[ $TERM == *"tmux"* ]] && alias vagrant="TERM=xterm-256color vagrant"
-[[ $TERM == *"tmux"* ]] && alias brew="TERM=xterm-256color brew"
-
-(( $+commands[emacs] )) && alias emacs="TERM=xterm-256color emacs "
-(( $+commands[stow] )) && alias stow='stow --ignore ".DS_Store"'
 (( $+commands[bat] )) && alias cat='bat '
 (( $+commands[python3] )) && alias server="python3 -m http.server 80"
+(( $+commands[fd] )) && alias fd='fd --hidden '
+(( $+commands[yarn] )) && alias y=yarn
 
 if (( $+commands[hub] )); then
-  alias git=hub
   compdef g=hub
 else
   compdef g=git
 fi
-
-(( $+commands[yarn] )) && alias y=yarn
 
 [[ -x "/Applications/Alacritty.app/Contents/MacOS/alacritty" ]] && alias alacritty='/Applications/Alacritty.app/Contents/MacOS/alacritty'

@@ -1,181 +1,168 @@
-# vim:ft=zsh:
+# setopt warn_create_global
 
-# Wrapping my config in a ZSH Anonymous Functions http://zsh.sourceforge.net/Doc/Release/Functions.html#Anonymous-Functions
-# To create a closure to not leak local variables
+##############################################################
+# Profiling.
+##############################################################
+
+# uncomment to profile & run `zprof`
+# zmodload zsh/zprof
+
+typeset -AU __FZF
+typeset -g ZPLG_MOD_DEBUG=1
+declare -A ZINIT
 
 function {
   # To override Catalina /etc/zshrc
   HISTSIZE=1000000
   SAVEHIST=$HISTSIZE
+  HISTFILE="${XDG_DATA_HOME:-$HOME}/.zsh_history"
+
+  # Set neovim as EDITOR if it's available, otherwise use vim
+  (( $+commands[nvim] )) && export EDITOR=nvim || export EDITOR=vim
+  export VISUAL=$EDITOR
+  export GIT_EDITOR=$EDITOR
+  case $EDITOR in
+      nvim) export MANPAGER="nvim +Man!" ;;
+       vim) export MANPAGER="/bin/sh -c \"col -b | vim -c 'set ft=man' -\"" ;;
+         *) export MANPAGER='less' ;;
+  esac
 
   ##############################################################
-  # ZPLUGIN https://github.com/zdharma/zplugin
+  # ZINIT https://github.com/zdharma/zinit
   ##############################################################
+  # Investigate why this doesn't work with tmux when I add it to zshenv
+  ZINIT[HOME_DIR]="$XDG_CACHE_HOME/zsh/zinit"
+  ZINIT[BIN_DIR]="$ZINIT[HOME_DIR]/bin"
+  ZINIT[PLUGINS_DIR]="$ZINIT[HOME_DIR]/plugins"
+  ZINIT[ZCOMPDUMP_PATH]="$XDG_CACHE_HOME/zsh/zcompdump"
+  # export ZINIT[OPTIMIZE_OUT_DISK_ACCESSES]=1
+  export ZPFX="$ZINIT[HOME_DIR]/polaris"
 
-  __ZPLUGIN="${ZDOTDIR:-$HOME}/.zplugin/bin/zplugin.zsh"
+  local __ZINIT="$ZINIT[BIN_DIR]/zinit.zsh"
 
-  if [[ ! -f "$__ZPLUGIN" ]]; then
-    if (( $+commands[curl] )); then
-      sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc/install.sh)"
+  if [[ ! -f "$__ZINIT" ]]; then
+    if (( $+commands[git] )); then
+      git clone https://github.com/zdharma/zinit.git "$ZINIT[BIN_DIR]"
     else
-      echo 'curl not found' >&2
+      echo 'git not found' >&2
       exit 1
     fi
   fi
 
-  source "$__ZPLUGIN"
-  autoload -Uz _zplugin
-  (( ${+_comps} )) && _comps[zplugin]=_zplugin
+  source "$__ZINIT"
+  autoload -Uz _zinit
+  (( ${+_comps} )) && _comps[zinit]=_zinit
 
   # Shell {{{
-    zplugin snippet OMZ::plugins/gpg-agent/gpg-agent.plugin.zsh
+    zinit snippet OMZP::gpg-agent
 
-    zplugin light zdharma/zui
-    zplugin ice lucid wait'[[ -n ${ZLAST_COMMANDS[(r)cras*]} ]]'
-    zplugin light zdharma/zplugin-crasis
+    zinit ice wait lucid from'gh-r' as'program'
+    zinit light https://github.com/junegunn/fzf-bin
 
-    zplugin ice pick"async.zsh" src"pure.zsh"
-    zplugin light ahmedelgabri/pure
-    SYMBOLS=(
-    "λ"
-    "ϟ"
-    "▲"
-    "∴"
-    "→"
-    "»"
-    "৸"
-    "◗"
-    )
+    zinit ice wait lucid as'command' multisrc'shell/{completion,key-bindings}.zsh' id-as'junegunn/fzf_completions' pick'bin/fzf-tmux'
+    zinit light https://github.com/junegunn/fzf
 
+    zinit ice wait lucid from'gh-r' as'program' \
+      mv'zoxide* -> zoxide' atclone'echo "unalias zi 2> /dev/null " > zhook.zsh && ./zoxide init zsh --hook pwd >> zhook.zsh' atpull'%atclone' src'zhook.zsh'
+    zinit light https://github.com/ajeetdsouza/zoxide
+
+    zinit ice wait lucid as'program' \
+      atclone'./install.sh $ZPFX $ZPFX' atpull'%atclone' compile'grc.zsh' src'grc.zsh' pick'$ZPFX/bin/grc*'
+    zinit light https://github.com/garabik/grc
+
+    zinit ice pick'async.zsh' src'pure.zsh'
+    zinit light https://github.com/ahmedelgabri/pure
+    PURE_SYMBOLS=("λ" "ϟ" "▲" "∴" "→" "»" "৸" "◗")
     # Arrays in zsh starts from 1
-    export PURE_PROMPT_SYMBOL="${SYMBOLS[$RANDOM % ${#SYMBOLS[@]} + 1]}"
-    export PURE_GIT_UP_ARROW='🠥'
-    export PURE_GIT_DOWN_ARROW='🠧'
-    # Old icon 
-    export PURE_GIT_BRANCH="  "
+    export PURE_PROMPT_SYMBOL="${PURE_SYMBOLS[$RANDOM % ${#PURE_SYMBOLS[@]} + 1]}"
     zstyle :prompt:pure:path color 240
     zstyle :prompt:pure:git:branch color blue
+    zstyle :prompt:pure:git:dirty color red
+    zstyle :prompt:pure:git:action color 005
     zstyle :prompt:pure:prompt:success color 003
+
+    zinit ice wait lucid from'gh-r' as'program' \
+      mv'direnv* -> direnv' atclone'./direnv hook zsh > zhook.zsh' atpull'%atclone' src'zhook.zsh'
+    zinit light https://github.com/direnv/direnv
+
+    zinit ice wait lucid from'gh-r' as'program' mv'hub* -> hub' \
+      atclone'prefix=$ZPFX ./hub/install; ln -sf ./hub/etc/hub.zsh_completion _hub; ./hub/bin/hub alias -s > zhook.zsh;' \
+      atpull'%atclone' src'zhook.zsh' pick'$ZPFX/bin/hub*'
+    zinit light https://github.com/github/hub
+
   # }}}
 
   # Utilities & enhancements {{{
-    zplugin ice wait"0" lucid
-    zplugin light "zsh-users/zsh-history-substring-search"
+    zinit ice wait lucid
+    zinit light https://github.com/zsh-users/zsh-history-substring-search
     # bind UP and DOWN keys
     bindkey "${terminfo[kcuu1]}" history-substring-search-up
     bindkey "${terminfo[kcud1]}" history-substring-search-down
 
     # bind UP and DOWN arrow keys (compatibility fallback)
-    # bindkey '^[[A' history-substring-search-up
-    # bindkey '^[[B' history-substring-search-down
+    bindkey '^[[A' history-substring-search-up
+    bindkey '^[[B' history-substring-search-down
+    bindkey -v
+    bindkey -M viins 'jj' vi-cmd-mode
+
+    #zinit ice atclone"dircolors -b LS_COLORS > clrs.zsh" \
+      #atpull'%atclone' pick"clrs.zsh" nocompile'!' atload'zstyle ":completion:*" list-colors “${(s.:.)LS_COLORS}”'
+          #zinit light https://github.com/trapd00r/LS_COLORS
 
 
-    zplugin ice wait"0" blockf lucid
-    zplugin light zsh-users/zsh-completions
-
-    zplugin ice wait"0" lucid atload"_zsh_autosuggest_start"
-    zplugin light zsh-users/zsh-autosuggestions
-    ZSH_AUTOSUGGEST_USE_ASYNC=true
-
-    zplugin ice wait"0" lucid atinit"zpcompinit; zpcdreplay"
-    zplugin light zdharma/fast-syntax-highlighting
-  # }}}
-
-  # Misc {{{
-    zplugin ice from"gh-r" as"program" bpick"*clojure-lsp*" atclone"chmod 755 clojure-lsp" atpull"%atclone" mv="clojure-lsp -> clojure-lsp"
-    zplugin light snoe/clojure-lsp
+    #zinit ice atclone"dircolors -b LS_COLORS > clrs.zsh" \
+      #atpull'%atclone' pick"clrs.zsh" nocompile'!' atload'zstyle ":completion:*" list-colors “${(s.:.)LS_COLORS}”'
+    #zinit light https://github.com/trapd00r/LS_COLORS
   # }}}
 
   # Local plugins/completions/etc... {{{
-    zplugin light %HOME/.zsh.d/aliases
+    zinit light $DOTFILES/files/.zsh.d/aliases
+  # }}}
+
+  # Recommended be loaded last {{{
+    zinit ice wait blockf lucid atpull'zinit creinstall -q .'
+    zinit light https://github.com/zsh-users/zsh-completions
+
+    zinit ice wait lucid atinit'ZINIT[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay' \
+      atload'unset "FAST_HIGHLIGHT[chroma-whatis]" "FAST_HIGHLIGHT[chroma-man]"'
+    zinit light https://github.com/zdharma/fast-syntax-highlighting
+
+    zinit ice wait lucid atload'_zsh_autosuggest_start'
+    zinit light https://github.com/zsh-users/zsh-autosuggestions
   # }}}
 
   ##############################################################
   # PLUGINS VARS & SETTINGS
   ##############################################################
-
-  ############### Python
-  export PYTHONSTARTUP="${HOME}/.pyrc.py"
-
-  ############### z.sh
-  [[ -f "${HOMEBREW_PREFIX}/etc/profile.d/z.sh" ]] && source "${HOMEBREW_PREFIX}/etc/profile.d/z.sh"
-
-  ############### grc
-  [[ -f "${HOMEBREW_PREFIX}/etc/grc.zsh" ]] && source "${HOMEBREW_PREFIX}/etc/grc.zsh"
+  ############### git fuzzy
 
   ############### FZF
-  if [[ -f "${XDG_CONFIG_HOME}/fzf/fzf.zsh" ]]; then
-    source "${XDG_CONFIG_HOME}/fzf/fzf.zsh"
-  else
-    echo "y" | "${HOMEBREW_PREFIX}/opt/fzf/install" --xdg --no-update-rc
-  fi
-
   export VIM_FZF_LOG=$(git config --get alias.l 2>/dev/null | awk '{$1=""; print $0;}' | tr -d '\r')
 
-  typeset -AU __FZF
   if (( $+commands[fd] )); then
-    __FZF[CMD]='fd --hidden --no-ignore-vcs --exclude ".git" --exclude "node_modules"'
+    __FZF[CMD]='fd --hidden --follow --no-ignore-vcs'
     __FZF[DEFAULT]="${__FZF[CMD]} --type f"
     __FZF[ALT_C]="${__FZF[CMD]} --type d ."
   elif (( $+commands[rg] )); then
-    __FZF[CMD]='rg --no-messages --no-ignore-vcs'
+    __FZF[CMD]='rg --follow --no-messages --no-ignore-vcs'
     __FZF[DEFAULT]="${__FZF[CMD]} --files"
   else
     __FZF[DEFAULT]='git ls-tree -r --name-only HEAD || find .'
   fi
 
   export FZF_DEFAULT_COMMAND="${__FZF[DEFAULT]}"
-  export FZF_PREVIEW_COMMAND="bat --style=numbers,changes --wrap never --color always {} || highlight -O ansi -l {} || cat {} || tree -C {}"
-  export FZF_DEFAULT_OPTS="--no-mouse --min-height 30 --height 50% -1 --reverse --multi --inline-info --preview='[[ \$(file --mime-type {}) =~ binary ]] && echo {} is a binary file || (bat --style=numbers --color=always {} || cat {}) 2> /dev/null | head -300' --preview-window='right:hidden:wrap' --bind='f3:execute(bat --style=numbers {} || less -f {}),f2:toggle-preview,ctrl-d:half-page-down,ctrl-u:half-page-up,ctrl-a:select-all+accept,ctrl-y:execute-silent(echo {+} | pbcopy)'"
+  export FZF_PREVIEW_COMMAND="bat --style=numbers,changes --wrap never --color always {} || cat {} || tree -C {}"
   export FZF_CTRL_T_COMMAND="${__FZF[CMD]}"
   export FZF_ALT_C_COMMAND="${__FZF[ALT_C]}"
-  # export FZF_DEFAULT_OPTS="--min-height 30 --height 50% --reverse --tabstop 2 --multi --margin 0,3,3,3 --bind '?:toggle-preview'"
-  export FZF_CTRL_T_OPTS="--preview-window down:60% --preview '($FZF_PREVIEW_COMMAND) 2> /dev/null | head -500'"
-  export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort' --header 'Press CTRL-Y to copy command into clipboard' --border"
-  export FZF_ALT_C_OPTS="--preview 'tree -C {} 2> /dev/null | head -200'"
-
-
-  ############### Homebrew
-  export HOMEBREW_INSTALL_BADGE="⚽️"
-  export HOMEBREW_NO_ANALYTICS=1
-  export HOMEBREW_FORCE_BREWED_GIT=1
-
-  ############### Bat, Ripgrep, Weechat
-  export BAT_CONFIG_PATH="${HOME}/.batrc"
-  export RIPGREP_CONFIG_PATH="${HOME}/.rgrc"
-  export WEECHAT_PASSPHRASE=`security find-generic-password -g -a weechat 2>&1| perl -e 'if (<STDIN> =~ m/password: \"(.*)\"$/ ) { print $1; }'`
-
-  ############### Exa
-  # di directories
-  # ex executable files
-  # fi regular files
-  # ln symlinks
-  # ur,uw,ux user permissions
-  # gr,gw,gx group permissions
-  # tr,tw,tx others permissions
-  # sn the numbers of a file's size
-  # sb the units of a file's size
-  # uu user that is you
-  # un user that is someone else
-  # gu a group that you belong to
-  # gn a group you aren't a member of
-  # ga new file in Git
-  # gm a modified file in Git
-  # gd a deleted file in Git
-  # gv a renamed file in Git
-  # da a file's date
-  export EXA_COLORS="uu=38;5;249:un=38;5;241:gu=38;5;245:gn=38;5;241:da=38;5;245:sn=38;5;7:sb=38;5;7:ur=38;5;3;1:uw=38;5;5;1:ux=38;5;1;1:ue=38;5;1;1:gr=38;5;3:gw=38;5;5:gx=38;5;1:tr=38;5;3:tw=38;5;1:tx=38;5;1:di=38;5;12:ex=38;5;7;1:*.md=38;5;229;4:*.png=38;5;208:*.jpg=38;5;208:*.gif=38;5;208"
-
-  ############### Direnv
-  export N_PREFIX="${HOME}/.n"
-  export NODE_VERSIONS="${N_PREFIX}/n/versions/node"
-  export NODE_VERSION_PREFIX=""
-  (( $+commands[direnv] )) && eval "$(direnv hook zsh)"
+  export FZF_DEFAULT_OPTS="--prompt='» ' --pointer='▶' --marker='✓ ' --reverse --tabstop 2 --multi --color=bg+:-1,marker:010 --bind '?:toggle-preview'"
+  export FZF_CTRL_T_OPTS="--preview '($FZF_PREVIEW_COMMAND) 2> /dev/null' --preview-window down:60%:noborder"
+  export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:wrap:hidden --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort' --header 'Press CTRL-Y to copy command into clipboard'"
+  export FZF_ALT_C_OPTS="--preview 'tree -C {} 2> /dev/null'"
 
   ############### Kitty
-  if [[ ! -z "${KITTY_WINDOW_ID}" ]]; then
-    kitty + complete setup zsh | source /dev/stdin
-  fi
+  #if [[ ! -z "${KITTY_WINDOW_ID}" ]]; then
+    #kitty + complete setup zsh | source /dev/stdin
+  #fi
 
   if [ "$(uname)" = "Darwin" ]; then
     # For context https://github.com/github/hub/pull/1962
@@ -195,14 +182,15 @@ function {
   if [ -f ${HOME}/.zshrc.local ]; then
     source ${HOME}/.zshrc.local
   else
-    if [[ -z "${HOMEBREW_GITHUB_API_TOKEN}" && -z "${GITHUB_TOKEN}" && -z "${GITHUB_USER}" ]]; then
-      echo "These ENV vars are not set: HOMEBREW_GITHUB_API_TOKEN, GITHUB_TOKEN & GITHUB_USER. Add them to ~/.zshrc.local"
+    [[ -z "${HOMEBREW_GITHUB_API_TOKEN}" ]] && echo "⚠ HOMEBREW_GITHUB_API_TOKEN not set." && _has_unset_config=yes
+    [[ -z "${GITHUB_TOKEN}" ]] && echo "⚠ GITHUB_TOKEN not set." && _has_unset_config=yes
+    [[ -z "${WEECHAT_PASSPHRASE}" ]] && echo "⚠ WEECHAT_PASSPHRASE not set." && _has_unset_config=yes
+    [[ ${_has_unset_config:-no} == "yes" ]] && echo "Set the missing configs in ~/.zshrc.local"
+  fi
+
+  if [ -e /etc/motd ]; then
+    if ! cmp -s ${HOME}/.hushlogin /etc/motd; then
+      tee ${HOME}/.hushlogin < /etc/motd
     fi
   fi
 }
-
-if [ -e /etc/motd ]; then
-  if ! cmp -s ${HOME}/.hushlogin /etc/motd; then
-    tee ${HOME}/.hushlogin < /etc/motd
-  fi
-fi

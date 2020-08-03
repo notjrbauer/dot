@@ -1,56 +1,94 @@
-env:
-  TERM: xterm-256color
-  # TERM: screen-256color
-
 window:
-  padding: {x: 0, y: 0}
-  dynamic_padding: false
+  padding: { x: 10, y: 10 }
   decorations: none
+  dynamic_title: true
+  dynamic_padding: true
 
 scrolling:
-  history: 0
+  history: 10000
+  multiplier: 3
 
-tabspaces: 2
 draw_bold_text_with_bright_colors: true
 
 font:
-  normal: {family: Fira Code, style: Retina}
-  bold: {family: Fira Code, style: Bold}
-  italic: {family: Fira Code, style: Light}
-  size: 10.0
+  normal: { family: Fira Code, style: Regular }
+  bold: { family: Fira Code, style: Bold }
+  italic: { family: Fira Code, style: Light }
+  size: 12.0
   use_thin_strokes: false
+  offset:
+    x: 0
+    y: 0
+  glyph_offset:
+    x: 0
+    y: 0
 
-visual_bell:
+bell:
   duration: 0
 
+# Background opacity
+background_opacity: 1.0
 # yamllint disable rule:colons
 schemes:
-  tender: &tender
+  challenger-deep: &challenger-deep
     primary:
-      background: '0x282828'
-      foreground: '0xeeeeee'
+      background: "0x1b182c"
+      foreground: "0xcbe3e7"
 
     # Normal colors
     normal:
-      black: '0x282828'
-      red: '0xf43753'
-      green: '0xc9d05c'
-      yellow: '0xffc24b'
-      blue: '0xb3deef'
-      magenta: '0xd3b987'
-      cyan: '0x73cef4'
-      white: '0xeeeeee'
+      black: "0x100e23"
+      red: "0xff8080"
+      green: "0x95ffa4"
+      yellow: "0xffe9aa"
+      blue: "0x91ddff"
+      magenta: "0xc991e1"
+      cyan: "0xaaffe4"
+      white: "0xcbe3e7"
 
     # Bright colors
     bright:
-      black: '0x1d1d1d'
-      red: '0xf43753'
-      green: '0xc9d05c'
-      yellow: '0xffc24b'
-      blue: '0xb3deef'
-      magenta: '0xd3b987'
-      cyan: '0x73cef4'
-      white: '0xffffff'
+      black: "0x565575"
+      red: "0xff5458"
+      green: "0x62d196"
+      yellow: "0xffb378"
+      blue: "0x65b2ff"
+      magenta: "0x906cff"
+      cyan: "0x63f2f1"
+      white: "0xa6b3cc"
+
+  tender: &tender
+    primary:
+      background: "0x282828"
+      foreground: "0xeeeeee"
+
+    cursor:
+      text: "0xabb2bf"
+      cursor: "0x5c6370"
+    # cursor:
+    #   text: '0xfeffff'
+    #   cursor: '0xffc24b'
+    # Normal colors
+    normal:
+      black: "0x666666"
+      red: "0xf43753"
+      green: "0xc9d05c"
+      yellow: "0xffc24b"
+      blue: "0xb3deef"
+      magenta: "0xd3b987"
+      cyan: "0x73cef4"
+      white: "0xeeeeee"
+
+    # Bright colors
+    bright:
+      black: "0x1d1d1d"
+      red: "0xf43753"
+      green: "0xc9d05c"
+      yellow: "0xffc24b"
+      blue: "0xb3deef"
+      magenta: "0xd3b987"
+      cyan: "0x73cef4"
+      white: "0xfeffff"
     # primary:
     #   background: '0x1e2127'
     #   foreground: '0xabb2bf'
@@ -87,94 +125,94 @@ schemes:
 
   solarized_dark: &solarized_dark
     primary:
-      background: '0x002b36'
-      foreground: '0x839496'
+      background: "0x002b36"
+      foreground: "0x839496"
 
     cursor:
-      text: '0x002b36'
-      cursor: '0x839496'
+      text: "0x002b36"
+      cursor: "0x839496"
 
     normal:
-      black: '0x073642'
-      red: '0xdc322f'
-      green: '0x859900'
-      yellow: '0xb58900'
-      blue: '0x268bd2'
-      magenta: '0xd33682'
-      cyan: '0x2aa198'
-      white: '0xeee8d5'
+      black: "0x073642"
+      red: "0xdc322f"
+      green: "0x859900"
+      yellow: "0xb58900"
+      blue: "0x268bd2"
+      magenta: "0xd33682"
+      cyan: "0x2aa198"
+      white: "0xeee8d5"
 
     bright:
-      black: '0x002b36'
-      red: '0xcb4b16'
-      green: '0x586e75'
-      yellow: '0x657b83'
-      blue: '0x839496'
-      magenta: '0x6c71c4'
-      cyan: '0x93a1a1'
-      white: '0xfdf6e3'
+      black: "0x002b36"
+      red: "0xcb4b16"
+      green: "0x586e75"
+      yellow: "0x657b83"
+      blue: "0x839496"
+      magenta: "0x6c71c4"
+      cyan: "0x93a1a1"
+      white: "0xfdf6e3"
 
   ayu_dark: &ayu_dark # Default colors
     primary:
-      background: '0x0A0E14'
-      foreground: '0xB3B1AD'
+      background: "0x0A0E14"
+      foreground: "0xB3B1AD"
 
     # Normal colors
     normal:
-      black: '0x01060E'
-      red: '0xEA6C73'
-      green: '0x91B362'
-      yellow: '0xF9AF4F'
-      blue: '0x53BDFA'
-      magenta: '0xFAE994'
-      cyan: '0x90E1C6'
-      white: '0xC7C7C7'
+      black: "0x01060E"
+      red: "0xEA6C73"
+      green: "0x91B362"
+      yellow: "0xF9AF4F"
+      blue: "0x53BDFA"
+      magenta: "0xFAE994"
+      cyan: "0x90E1C6"
+      white: "0xC7C7C7"
 
     # Bright colors
     bright:
-      black: '0x686868'
-      red: '0xF07178'
-      green: '0xC2D94C'
-      yellow: '0xFFB454'
-      blue: '0x59C2FF'
-      magenta: '0xFFEE99'
-      cyan: '0x95E6CB'
-      white: '0xFFFFFF'
+      black: "0x686868"
+      red: "0xF07178"
+      green: "0xC2D94C"
+      yellow: "0xFFB454"
+      blue: "0x59C2FF"
+      magenta: "0xFFEE99"
+      cyan: "0x95E6CB"
+      white: "0xFFFFFF"
 
   ayu-light: &ayu-light
     primary:
-      background: '0xfafafa'
-      foreground: '0x5b6672'
+      background: "0xfafafa"
+      foreground: "0x5b6672"
 
     # Normal colors
     normal:
-      black: '0x000000' #0
-      red: '0xf2590b' #1
-      green: '0x76cc00' #2
-      yellow: '0xf29717' #3
-      blue: '0x41a5d9' #4
-      magenta: '0x9965cc' #5
-      cyan: '0x4dbf98' #6
-      white: '0xc7c7c7' #7
+      black: "0x000000" #0
+      red: "0xf2590b" #1
+      green: "0x76cc00" #2
+      yellow: "0xf29717" #3
+      blue: "0x41a5d9" #4
+      magenta: "0x9965cc" #5
+      cyan: "0x4dbf98" #6
+      white: "0xc7c7c7" #7
 
     # Bright colors
     bright:
-      black: '0x676767'
-      red: '0xd6646a' #9
-      green: '0xa3d900' #10
-      yellow: '0xe7c446' #11
-      blue: '0x6871ff' #12
-      magenta: '0xa37acc' #13
-      cyan: '0x56d9ad' #14
-      white: '0xfeffff' #15
+      black: "0x676767"
+      red: "0xd6646a" #9
+      green: "0xa3d900" #10
+      yellow: "0xe7c446" #11
+      blue: "0x6871ff" #12
+      magenta: "0xa37acc" #13
+      cyan: "0x56d9ad" #14
+      white: "0xfeffff" #15
 
 # yamllint enable rule:colons
 
 colors: *tender
 
 mouse:
-  double_click: {threshold: 300}
-  triple_click: {threshold: 300}
+  double_click: { threshold: 300 }
+  triple_click: { threshold: 300 }
   faux_scrollback_lines: 1
   hide_when_typing: true
   url:
@@ -182,7 +220,7 @@ mouse:
     modifiers: Command
 
 selection:
-  semantic_escape_chars: ",│`|:\"' ()[]{}<>\t"
+  semantic_escape_chars: ",│`|:\"' ()[]{}<>"
 
 live_config_reload: true
 
@@ -192,30 +230,22 @@ shell:
     - --login
 
 key_bindings:
-  # - { key: F1, chars: "\x1bop" }
-  # - { key: F2, chars: "\x1boq" }
-  # - { key: F3, chars: "\x1bor" }
-  # - { key: F4, chars: "\x1bos" }
-  # - { key: F5, chars: "\x1b[15~" }
-  # - { key: F6, chars: "\x1b[17~" }
-  # - { key: F7, chars: "\x1b[18~" }
-  # - { key: F8, chars: "\x1b[19~" }
-  # - { key: F9, chars: "\x1b[20~" }
-  # - { key: F10, chars: "\x1b[21~" }
-  # - { key: F11, chars: "\x1b[23~" }
-  # - { key: F12, chars: "\x1b[24~" }
   - {key: V, mods: Command, action: Paste}
   - {key: C, mods: Command, action: Copy}
+  - {key: Paste, action: Paste}
+  - {key: Copy, action: Copy}
+  - {key: H, mods: Command, action: Hide}
   - {key: Q, mods: Command, action: Quit}
   - {key: W, mods: Command, action: Quit}
-  - {key: Insert, mods: Shift, action: PasteSelection}
-  - {key: Key0, mods: Control, action: ResetFontSize}
-  - {key: Equals, mods: Control, action: IncreaseFontSize}
-  - {key: Subtract, mods: Command, action: DecreaseFontSize}
   - {key: Home, chars: "\x1bOH", mode: AppCursor}
   - {key: Home, chars: "\x1b[H", mode: ~AppCursor}
   - {key: End, chars: "\x1bOF", mode: AppCursor}
   - {key: End, chars: "\x1b[F", mode: ~AppCursor}
+  - {key: Key0, mods: Command, action: ResetFontSize}
+  - {key: Equals, mods: Command, action: IncreaseFontSize}
+  - {key: Minus, mods: Command, action: DecreaseFontSize}
+  - {key: K, mods: Command, action: ClearHistory}
+  - {key: K, mods: Command, chars: "\x0c"}
   - {key: PageUp, mods: Shift, chars: "\x1b[5;2~"}
   - {key: PageUp, mods: Control, chars: "\x1b[5;5~"}
   - {key: PageUp, chars: "\x1b[5~"}
@@ -295,26 +325,31 @@ key_bindings:
   - {key: F10, mods: Alt, chars: "\x1b[21;6~"}
   - {key: F11, mods: Alt, chars: "\x1b[23;6~"}
   - {key: F12, mods: Alt, chars: "\x1b[24;6~"}
-  - {key: F1, mods: Super, chars: "\x1b[1;3P"}
-  - {key: F2, mods: Super, chars: "\x1b[1;3Q"}
-  - {key: F3, mods: Super, chars: "\x1b[1;3R"}
-  - {key: F4, mods: Super, chars: "\x1b[1;3S"}
-  - {key: F5, mods: Super, chars: "\x1b[15;3~"}
-  - {key: F6, mods: Super, chars: "\x1b[17;3~"}
-  - {key: F7, mods: Super, chars: "\x1b[18;3~"}
-  - {key: F8, mods: Super, chars: "\x1b[19;3~"}
-  - {key: F9, mods: Super, chars: "\x1b[20;3~"}
-  - {key: F10, mods: Super, chars: "\x1b[21;3~"}
-  - {key: F11, mods: Super, chars: "\x1b[23;3~"}
-  - {key: F12, mods: Super, chars: "\x1b[24;3~"}
+  - {key: F1, mods: Command, chars: "\x1b[1;3P"}
+  - {key: F2, mods: Command, chars: "\x1b[1;3Q"}
+  - {key: F3, mods: Command, chars: "\x1b[1;3R"}
+  - {key: F4, mods: Command, chars: "\x1b[1;3S"}
+  - {key: F5, mods: Command, chars: "\x1b[15;3~"}
+  - {key: F6, mods: Command, chars: "\x1b[17;3~"}
+  - {key: F7, mods: Command, chars: "\x1b[18;3~"}
+  - {key: F8, mods: Command, chars: "\x1b[19;3~"}
+  - {key: F9, mods: Command, chars: "\x1b[20;3~"}
+  - {key: F10, mods: Command, chars: "\x1b[21;3~"}
+  - {key: F11, mods: Command, chars: "\x1b[23;3~"}
+  - {key: F12, mods: Command, chars: "\x1b[24;3~"}
+  - {key: NumpadEnter, chars: "\n"}
+    # Vim
+  - {key: D, mods: Alt, chars: "\x1b\x64"}
+    # https://github.com/jwilm/alacritty/issues/93#issuecomment-312760361
+  - {key: Key6, mods: Control, chars: "\x1e"}
+    # Tmux
+  - {key: W, mods: Command, chars: "\x01\x78"}
+  - {key: T, mods: Command, chars: "\x01\x63"}
 
 # Display tabs using this many cells (changes require restart)
 # tabspaces: 8
 
-# Background opacity
-# background_opacity: 1.0
-
-dynamic_title: true
 
 cursor:
   style: Block
+  unfocused_hollow: true
