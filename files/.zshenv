@@ -129,6 +129,8 @@ export PURE_GIT_BRANCH="  "
 export ZSH_AUTOSUGGEST_USE_ASYNC=true
 
 export GITHUB_USER="notjrbauer"
+export GO111MODULE=on
+
 
 # Ensure that a non-login, non-interactive shell has a defined environment.
 # (Only once) if it was not sourced before, becuase .zshenv is always sourced
