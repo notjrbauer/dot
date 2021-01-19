@@ -27,4 +27,5 @@ zsdoc/data
 /tests/_output/*
 !/tests/_output/.gitkeep
 
+.zplugin
 .zplugin/*

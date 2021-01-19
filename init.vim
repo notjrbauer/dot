@@ -945,3 +945,4 @@ call plug#end()
 " Color Scheme Settings {{{
 colorscheme tender
 " }}}}}}
+packadd vim-polyglot

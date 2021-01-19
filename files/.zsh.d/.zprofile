@@ -41,6 +41,7 @@ cdpath=(
 
 # Set the list of directories that Zsh searches for programs.
 path=(
+  ${ZDOTDIR:-${DOTFILES}/files/.config/zsh}/bin(N-/)
   ./node_modules/.bin
   ${DOTFILES}/extra/bin(N-/)
   ${HOME}/.local/bin(N-/)
@@ -61,3 +62,4 @@ path=(
 )
 
 for config (${ZDOTDIR}/config/*.zsh) source $config
+eval "$(pyenv init -)"
